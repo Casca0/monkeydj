@@ -12,11 +12,11 @@ process.env.DISCORD_TOKEN;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, 'GuildVoiceStates'] });
 
-// Teste Música - INÍCIO
+// Música - INÍCIO
 
 const player = new Player(client);
 
-// Teste Música - FIM
+// Música - FIM
 
 // Manipulador de comandos - INÍCIO
 
