@@ -54,4 +54,15 @@ for (const file of eventsFiles) {
 
 // Manipulador de eventos - FIM
 
+// Server - INÍCIO
+
+const http = require('http');
+const server = http.createServer((req, res) => {
+	res.writeHead(200);
+	res.end('ok');
+});
+server.listen(3000);
+
+// Server - FIM
+
 client.login();
