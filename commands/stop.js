@@ -9,7 +9,7 @@ module.exports = {
 		if (!queue || !queue.playing) {
 			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
-		queue.destroy();
+		queue.destroy(true);
 		return await interaction.reply({ content: 'Player Parado!' });
 	},
 };
