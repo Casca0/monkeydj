@@ -3,9 +3,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord.js');
-const { clientId } = require('./config.json');
 
 const token = process.env.DISCORD_TOKEN;
+const clientId = process.env.CLIENT_ID;
 
 const commands = [];
 const commandsPath = path.join(__dirname, 'commands');
