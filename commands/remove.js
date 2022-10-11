@@ -21,8 +21,6 @@ module.exports = {
 		const trackName = queue.tracks[trackIndex].title;
 		queue.remove(trackIndex);
 
-		await interaction.deferReply();
-
-		return await interaction.followUp({ content: `Música removida (**${trackName}**).` });
+		return await interaction.reply({ content: `Música removida (**${trackName}**).` });
 	},
 };

@@ -13,8 +13,6 @@ module.exports = {
 		const currentTrack = queue.current;
 		const success = queue.skip();
 
-		await interaction.deferReply();
-
-		return await interaction.followUp({ content: success ? `Pulando a música atual (**${currentTrack}**)` : 'Algo deu errado!' });
+		return await interaction.reply({ content: success ? `Pulando a música atual (**${currentTrack}**)` : 'Algo deu errado!' });
 	},
 };

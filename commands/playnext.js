@@ -26,8 +26,6 @@ module.exports = {
 		}
 		queue.insert(searchResult.tracks[0]);
 
-		await interaction.deferReply();
-
-		return await interaction.followUp({ content: `Carregando a música **${searchResult.tracks[0].title}**`, ephemeral: true });
+		return await interaction.reply({ content: `Carregando a música **${searchResult.tracks[0].title}**`, ephemeral: true });
 	},
 };

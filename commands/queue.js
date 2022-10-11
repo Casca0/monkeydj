@@ -9,12 +9,11 @@ module.exports = {
 				.setDescription('Número da página da fila.')
 				.setRequired(false)),
 	async execute(interaction, player) {
-		await interaction.deferReply();
 		const queue = player.getQueue(interaction.guild.id);
 		let page = interaction.options.getInteger('página');
 
 		if (!queue || !queue.playing) {
-			return await interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
 		if (!page) page = 1;
@@ -25,10 +24,10 @@ module.exports = {
 		const currentTrack = queue.current;
 
 		const tracks = queue.tracks.slice(pageStart, pageEnd).map((m, i) => {
-			return `${i + pageStart + 1}. **${m.title}** ([link](${m.url}))`;
+			return `${i + pageStart + 1}. **[${m.title}](${m.url})** - ${m.requestedBy}`;
 		});
 
-		return await interaction.followUp({ embeds: [{
+		return await interaction.reply({ embeds: [{
 			title: 'Fila do servidor',
 			description: `${tracks.join('\n')}${
 				queue.tracks.length > pageEnd ?
@@ -36,7 +35,7 @@ module.exports = {
 					''
 			}`,
 			color: 0xff0000,
-			fields: [{ name: '🎶 | Tocando agora', value: `**${currentTrack.title}** ([link](${currentTrack.url}))` }],
+			fields: [{ name: '🎶 | Tocando agora', value: `**[${currentTrack.title}](${currentTrack.url}) - ${currentTrack.author}**` }],
 		}] });
 	},
 };

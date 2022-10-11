@@ -10,22 +10,18 @@ module.exports = {
 			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
-		const progress = queue.createProgressBar();
-		const perc = queue.getPlayerTimestamp();
-
-		await interaction.deferReply();
-
-		return await interaction.followUp({ embeds: [
+		return await interaction.reply({ embeds: [
 			{
 				title: 'Tocando agora',
-				description: `🎶 | **${queue.current.title}**! (\`${perc.progress == 'Infinity' ? 'Ao vivo' : perc.progress + '%'}\`)`,
-				fields: [
-					{
-						name: '\u200b',
-						value: progress.replace(/ 0:00/g, ' ◉ AO VIVO'),
-					},
-				],
-				color: 0xffffff,
+				description: `**[${queue.current.title}](${queue.current.url})** - ${queue.current.author}`,
+				fields: [{
+					name: 'Requisitado por',
+					value: `${queue.current.requestedBy}`,
+				}],
+				thumbnail: {
+					url: queue.current.thumbnail,
+				},
+				color: 0x4D3A81,
 			},
 		] });
 	},
