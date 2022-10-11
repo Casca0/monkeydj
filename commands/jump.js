@@ -14,8 +14,6 @@ module.exports = {
 			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
-		await interaction.deferReply();
-
 		const indexOption = interaction.options.getInteger('músicas');
 
 		const trackIndex = indexOption - 1;
@@ -23,8 +21,6 @@ module.exports = {
 		const trackName = queue.tracks[trackIndex].title;
 		queue.jump(trackIndex);
 
-		await interaction.deferReply();
-
-		return await interaction.followUp({ content: `Pulando para **${trackName}**.` });
+		return await interaction.reply({ content: `Pulando para **${trackName}**.` });
 	},
 };

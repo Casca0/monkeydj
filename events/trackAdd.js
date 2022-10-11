@@ -4,8 +4,8 @@ module.exports = {
 	execute(queue, track) {
 		const trackCard = {
 			title: 'Música adicionada a fila!',
-			description: `**${track.title} - ${track.author}** ([link](${track.url}))`,
-			image: {
+			description: `**[${track.title}](${track.url}) - ${track.author}**`,
+			thumbnail: {
 				url: track.thumbnail,
 			},
 			color: 0x4feb34,

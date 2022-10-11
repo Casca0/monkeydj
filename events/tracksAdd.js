@@ -7,7 +7,7 @@ module.exports = {
 		const pageEnd = pageStart + 10;
 
 		const tracks = track.slice(pageStart, pageEnd).map((m, i) => {
-			return `${i + pageStart + 1}. **${m.title} - ${m.author}** ([link](${m.url}))`;
+			return `${i + pageStart + 1}. **[${m.title}](${m.url}) - ${m.author}**`;
 		});
 
 		const trackCard = {

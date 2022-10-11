@@ -12,8 +12,6 @@ module.exports = {
 
 		const paused = queue.setPaused(false);
 
-		await interaction.deferReply();
-
-		return await interaction.followUp({ content: paused ? 'Música retomada.' : 'Algo deu errado!' });
+		return await interaction.reply({ content: paused ? 'Música retomada.' : 'Algo deu errado!' });
 	},
 };

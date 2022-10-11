@@ -12,8 +12,6 @@ module.exports = {
 
 		await queue.shuffle();
 
-		await interaction.deferReply();
-
-		return await interaction.followUp({ content: 'Fila embaralhada!', ephemeral: true });
+		return await interaction.reply({ content: 'Fila embaralhada!' });
 	},
 };
