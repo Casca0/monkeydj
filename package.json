@@ -2,10 +2,9 @@
   "name": "monkeydj",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prestart": "node deploy-commands.js",
+    "prestart": "node src/utils/deploy-commands.js",
     "start": "node ."
   },
   "repository": {
@@ -24,6 +23,7 @@
     "discord-player": "^5.3.1",
     "discord.js": "^14.2.0",
     "dotenv": "^16.0.1",
+    "express": "^4.18.2",
     "ffmpeg-static": "^5.1.0",
     "ytdl-core": "^4.11.2"
   },

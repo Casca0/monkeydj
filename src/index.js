@@ -1,24 +1,19 @@
-// Imports - INÍCIO
+// Imports
 
-require('dotenv/config');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 const { Player } = require('discord-player');
 
-// Imports - FIM
-
 process.env.DISCORD_TOKEN;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, 'GuildVoiceStates'] });
 
-// Música - INÍCIO
+// Música
 
 const player = new Player(client);
 
-// Música - FIM
-
-// Manipulador de comandos - INÍCIO
+// Manipulador de comandos
 
 client.commands = new Collection();
 
@@ -32,9 +27,7 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-// Manipulador de comandos - FIM
-
-// Manipulador de eventos - INÍCIO
+// Manipulador de eventos
 
 const eventsPath = path.join(__dirname, 'events');
 const eventsFiles = fs.readdirSync(eventsPath).filter((file) => file.endsWith('.js'));
@@ -52,6 +45,17 @@ for (const file of eventsFiles) {
 	}
 }
 
-// Manipulador de eventos - FIM
+// Server
+
+const app = express();
+
+app.get('/', (req, res) => {
+	res.send('Hello World!');
+});
+
+const port = 8080;
+app.listen(port, () => {
+	console.log(`helloworld: listening on port ${port}`);
+});
 
 client.login();
