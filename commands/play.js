@@ -36,7 +36,7 @@ module.exports = {
 				dlChunkSize: 0,
 			},
 			disableVolume: true,
-			spotifyBridge: false,
+			spotifyBridge: true,
 			leaveOnEnd: false,
 			metadata: {
 				channel: interaction.channel,
