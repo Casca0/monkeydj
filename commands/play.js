@@ -50,6 +50,8 @@ module.exports = {
 			return await interaction.reply({ content: 'Não consegui me conectar ao canal.', ephemeral: true });
 		}
 
+		console.log(searchResult);
+
 		await interaction.reply({ content: `Carregando a ${searchResult.playlist ? `playlist **${searchResult.playlist.title}**` : `música **${searchResult.tracks[0].title}**`}`, ephemeral: true });
 
 		searchResult.playlist ? queue.addTracks(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
