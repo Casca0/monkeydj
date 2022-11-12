@@ -1,30 +1,28 @@
 {
+	"extends": "eslint:recommended",
 	"env": {
-		"commonjs": true,
-		"es2021": true,
-		"node": true
+		"node": true,
+		"es2021": true
 	},
-	"extends": [
-		"google"
-	],
 	"parserOptions": {
 		"ecmaVersion": "latest"
 	},
 	"rules": {
-		"max-len": "off",
 		"arrow-spacing": ["warn", { "before": true, "after": true }],
+		"brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
 		"comma-dangle": ["error", "always-multiline"],
 		"comma-spacing": "error",
 		"comma-style": "error",
 		"curly": ["error", "multi-line", "consistent"],
 		"dot-location": ["error", "property"],
+		"eol-last": "error",
 		"handle-callback-err": "off",
 		"indent": ["error", "tab"],
-		"no-tabs": ["error", { "allowIndentationTabs": true }],
 		"keyword-spacing": "error",
 		"max-nested-callbacks": ["error", { "max": 4 }],
 		"max-statements-per-line": ["error", { "max": 2 }],
 		"no-console": "off",
+		"no-case-declarations":"off",
 		"no-empty-function": "error",
 		"no-floating-decimal": "error",
 		"no-inline-comments": "error",
@@ -37,7 +35,6 @@
 		"object-curly-spacing": ["error", "always"],
 		"prefer-const": "error",
 		"quotes": ["error", "single"],
-		"linebreak-style": "off",
 		"semi": ["error", "always"],
 		"space-before-blocks": "error",
 		"space-before-function-paren": ["error", {

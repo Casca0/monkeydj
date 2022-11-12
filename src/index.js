@@ -1,18 +1,26 @@
 // Imports
 
+require('dotenv/config');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
 const { Player } = require('discord-player');
 
-process.env.DISCORD_TOKEN;
+const token = process.env['DISCORD_TOKEN'];
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, 'GuildVoiceStates'] });
 
 // Música
 
-const player = new Player(client);
+const player = new Player(client, {
+	ytdlOptions: {
+		filter: 'audioonly',
+		quality: 'highestaudio',
+		highWaterMark: 1 << 25,
+		dlChunkSize: 0,
+	},
+});
 
 // Manipulador de comandos
 
@@ -39,9 +47,16 @@ for (const file of eventsFiles) {
 
 	if (event.once) {
 		client.once(event.name, (...args) => event.execute(...args));
-	} else if (event.music) {
-		player.on(event.name, (...args) => event.execute(...args));
-	} else {
+	}
+	else if (event.music) {
+		if (event.once) {
+			player.once(event.name, (...args) => event.execute(...args));
+		}
+		else {
+			player.on(event.name, (...args) => event.execute(...args));
+		}
+	}
+	else {
 		client.on(event.name, (...args) => event.execute(...args, client, player));
 	}
 }
@@ -59,4 +74,4 @@ app.listen(port, () => {
 	console.log(`helloworld: listening on port ${port}`);
 });
 
-client.login();
+client.login(token);

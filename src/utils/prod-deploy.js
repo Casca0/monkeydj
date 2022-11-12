@@ -1,10 +1,12 @@
+require('dotenv/config');
 const fs = require('node:fs');
 const path = require('node:path');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord.js');
+const chalk = require('chalk');
 
-const token = process.env.DISCORD_TOKEN;
-const clientId = process.env.CLIENT_ID;
+const { clientId } = require('../config.json');
+const token = process.env['DISCORD_TOKEN'];
 
 const commands = [];
 const commandsPath = path.join(__dirname, '../commands');
@@ -19,5 +21,9 @@ for (const file of commandFiles) {
 const rest = new REST({ version: '10' }).setToken(token);
 
 rest.put(Routes.applicationCommands(clientId), { body: commands })
-	.then(() => console.log('\033[0;92mComandos registrados com sucesso : \033[0m' + '\033[1;36m' + commands.length + '\033[0m'))
+	.then(() => console.log(chalk.bgGreen('Comandos registrados em produção: ') + chalk.cyan(commands.length)))
 	.catch(console.error);
+
+// rest.put(Routes.applicationCommands(clientId), { body: [] })
+// 	.then(() => console.log(chalk.red('Comandos registrados em produção deletados!')))
+// 	.catch(console.error);
