@@ -1,13 +1,13 @@
 // Imports
 
-require('dotenv/config');
+require('dotenv').config();
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
 const { Player } = require('discord-player');
 
-const token = process.env['DISCORD_TOKEN'];
+const token = process.env.DISCORD_TOKEN;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates] });
 
