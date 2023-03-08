@@ -28,5 +28,3 @@ Para rodar um ambiente local :
 ```bash
 $ npm start
 ```
-
-O deploy dos comandos (interações) acontece no script de pré-inicialização `pre-start`.
