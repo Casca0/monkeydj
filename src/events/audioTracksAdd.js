@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'tracksAdd',
+	name: 'audioTracksAdd',
 	music: true,
 	execute(queue, track) {
 		const page = 1;
@@ -13,8 +13,8 @@ module.exports = {
 		const trackCard = {
 			title: 'Músicas adicionadas a fila!',
 			description: `${tracks.join('\n')}${
-				queue.tracks.length > pageEnd ?
-					`\n...${queue.tracks.length - pageEnd} mais música(s)` :
+				queue.tracks.size > pageEnd ?
+					`\n...${queue.tracks.size - pageEnd} mais música(s)` :
 					''
 			}`,
 			color: 0x4feb34,

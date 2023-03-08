@@ -9,7 +9,7 @@ module.exports = {
 				.setDescription('Número da música na fila.')
 				.setRequired(true)),
 	async execute(interaction, player) {
-		const queue = player.getQueue(interaction.guild.id);
+		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue) {
 			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
@@ -18,8 +18,8 @@ module.exports = {
 
 		const trackIndex = indexOption - 1;
 
-		const trackName = queue.tracks[trackIndex].title;
-		queue.remove(trackIndex);
+		const trackName = queue.tracks.store[trackIndex].title;
+		queue.removeTrack(trackIndex);
 
 		return await interaction.reply({ content: `Música removida (**${trackName}**).` });
 	},

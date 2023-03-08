@@ -9,10 +9,10 @@ module.exports = {
 				.setDescription('Número da página da fila.')
 				.setRequired(false)),
 	async execute(interaction, player) {
-		const queue = player.getQueue(interaction.guild.id);
+		const queue = player.nodes.get(interaction.guild.id);
 		let page = interaction.options.getInteger('página');
 
-		if (!queue || !queue.playing) {
+		if (!queue || !queue.node.isPlaying()) {
 			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
@@ -21,17 +21,17 @@ module.exports = {
 		const pageStart = 10 * (page - 1);
 		const pageEnd = pageStart + 10;
 
-		const currentTrack = queue.current;
+		const currentTrack = queue.currentTrack;
 
-		const tracks = queue.tracks.slice(pageStart, pageEnd).map((m, i) => {
+		const tracks = queue.tracks.store.slice(pageStart, pageEnd).map((m, i) => {
 			return `${i + pageStart + 1}. **[${m.title}](${m.url})** - ${m.requestedBy}`;
 		});
 
 		return await interaction.reply({ embeds: [{
 			title: 'Fila do servidor',
 			description: `${tracks.join('\n')}${
-				queue.tracks.length > pageEnd ?
-					`\n...${queue.tracks.length - pageEnd} mais música(s)` :
+				queue.tracks.size > pageEnd ?
+					`\n...${queue.tracks.size - pageEnd} mais música(s)` :
 					''
 			}`,
 			color: 0xff0000,

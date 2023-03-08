@@ -1,7 +1,6 @@
 module.exports = {
-	name: 'trackStart',
+	name: 'playerStart',
 	music: true,
-	once: true,
 	execute(queue, track) {
 		queue.metadata.channel.send(`TOCANDO AGORA **${track.title}**!`);
 	},

@@ -9,7 +9,7 @@ const { Player } = require('discord-player');
 
 const token = process.env['DISCORD_TOKEN'];
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, 'GuildVoiceStates'] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates] });
 
 // Música
 
@@ -45,21 +45,19 @@ for (const file of eventsFiles) {
 	const filePath = path.join(eventsPath, file);
 	const event = require(filePath);
 
+	if (event.music) {
+		player.events.on(event.name, (...args) => event.execute(...args));
+	}
+
 	if (event.once) {
 		client.once(event.name, (...args) => event.execute(...args));
-	}
-	else if (event.music) {
-		if (event.once) {
-			player.once(event.name, (...args) => event.execute(...args));
-		}
-		else {
-			player.on(event.name, (...args) => event.execute(...args));
-		}
 	}
 	else {
 		client.on(event.name, (...args) => event.execute(...args, client, player));
 	}
 }
+
+client.login(token);
 
 // Server
 
@@ -74,4 +72,3 @@ app.listen(port, () => {
 	console.log(`helloworld: listening on port ${port}`);
 });
 
-client.login(token);
