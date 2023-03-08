@@ -9,8 +9,8 @@ module.exports = {
 				.setDescription('Número de músicas para pular da fila.')
 				.setRequired(true)),
 	async execute(interaction, player) {
-		const queue = player.getQueue(interaction.guild.id);
-		if (!queue || !queue.playing) {
+		const queue = player.nodes.get(interaction.guild.id);
+		if (!queue || !queue.node.isPlaying()) {
 			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
@@ -18,7 +18,7 @@ module.exports = {
 
 		const trackIndex = indexOption - 1;
 
-		const trackName = queue.tracks[trackIndex].title;
+		const trackName = queue.tracks.store[trackIndex].title;
 		queue.jump(trackIndex);
 
 		return await interaction.reply({ content: `Pulando para **${trackName}**.` });

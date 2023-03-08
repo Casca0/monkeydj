@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'trackAdd',
+	name: 'audioTrackAdd',
 	music: true,
 	execute(queue, track) {
 		const trackCard = {

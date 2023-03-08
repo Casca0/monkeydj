@@ -2,7 +2,6 @@ require('dotenv/config');
 const { REST, Routes } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
-const chalk = require('chalk');
 
 const { devGuildId, clientId } = require('../config.json');
 const token = process.env['DISCORD_TOKEN'];
@@ -23,9 +22,9 @@ rest.put(
 	Routes.applicationGuildCommands(clientId, devGuildId),
 	{ body: commands },
 )
-	.then(() => console.log(chalk.greenBright('Comandos registrados em desenvolvimento: ') + chalk.cyan(commands.length)))
+	.then(() => console.log('Comandos registrados em desenvolvimento: ' + commands.length))
 	.catch(console.error);
 
 // rest.put(Routes.applicationGuildCommands(clientId, devGuildId), { body: [] })
-// 	.then(() => console.log(chalk.red('Comandos registrados em desenvolvimento deletados!')))
+// 	.then(() => console.log('Comandos registrados em desenvolvimento deletados!'))
 // 	.catch(console.error);

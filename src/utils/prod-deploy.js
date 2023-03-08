@@ -3,7 +3,6 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord.js');
-const chalk = require('chalk');
 
 const { clientId } = require('../config.json');
 const token = process.env['DISCORD_TOKEN'];
@@ -21,9 +20,9 @@ for (const file of commandFiles) {
 const rest = new REST({ version: '10' }).setToken(token);
 
 rest.put(Routes.applicationCommands(clientId), { body: commands })
-	.then(() => console.log(chalk.bgGreen('Comandos registrados em produção: ') + chalk.cyan(commands.length)))
+	.then(() => console.log('Comandos registrados em produção: ' + commands.length))
 	.catch(console.error);
 
 // rest.put(Routes.applicationCommands(clientId), { body: [] })
-// 	.then(() => console.log(chalk.red('Comandos registrados em produção deletados!')))
+// 	.then(() => console.log('Comandos registrados em produção deletados!'))
 // 	.catch(console.error);
