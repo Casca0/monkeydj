@@ -19,8 +19,14 @@ module.exports = {
 		const trackIndex = indexOption - 1;
 
 		const trackName = queue.tracks.store[trackIndex].title;
-		queue.jump(trackIndex);
 
+		try {
+			queue.node.skipTo(trackIndex);
+		}
+		catch (err) {
+			console.log(err);
+			return await interaction.reply({ content: 'Ocorreu um erro ao pular de música' });
+		}
 		return await interaction.reply({ content: `Pulando para **${trackName}**.` });
 	},
 };

@@ -25,15 +25,17 @@ module.exports = {
 			console.log(err);
 		});
 
-		if (!searchResult.tracks || searchResult.tracks == []) return await interaction.reply({ content: 'Não encontrei a música.', ephemeral: true });
+		if (searchResult.tracks == [] || searchResult.tracks[0] == undefined) return await interaction.reply({ content: 'Não encontrei a música.', ephemeral: true });
 
 		const queue = player.nodes.create(interaction.guild, {
-			disableVolume: true,
+			volume: false,
+			disableHistory: true,
 			leaveOnEmpty: true,
 			leaveOnEmptyCooldown: 300000,
 			leaveOnEnd: true,
 			leaveOnEndCooldown: 300000,
 			selfDeaf: true,
+			skipOnNoStream: true,
 
 			metadata: {
 				channel: interaction.channel,
@@ -53,6 +55,6 @@ module.exports = {
 
 		searchResult.playlist ? queue.addTrack(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
 
-		if (!queue.playing) await queue.node.play();
+		if (!queue.node.isPlaying()) await queue.node.play();
 	},
 };
