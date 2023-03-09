@@ -10,7 +10,7 @@ module.exports = {
 			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
-		const paused = queue.node.pause();
+		const paused = await queue.node.pause();
 
 		return await interaction.reply({ content: paused ? 'Música pausada.' : 'Algo deu errado!' });
 	},

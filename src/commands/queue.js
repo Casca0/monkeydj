@@ -12,8 +12,8 @@ module.exports = {
 		const queue = player.nodes.get(interaction.guild.id);
 		let page = interaction.options.getInteger('página');
 
-		if (!queue || !queue.node.isPlaying()) {
-			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
+		if (!queue) {
+			return await interaction.reply({ content: 'Nenhuma música na fila!', ephemeral: true });
 		}
 
 		if (!page) page = 1;
@@ -31,7 +31,7 @@ module.exports = {
 			title: 'Fila do servidor',
 			description: `${tracks.join('\n')}${
 				queue.tracks.size > pageEnd ?
-					`\n...${queue.tracks.size - pageEnd} mais música(s)` :
+					`\n...mais ${queue.tracks.size - pageEnd} música(s)` :
 					''
 			}`,
 			color: 0xff0000,
