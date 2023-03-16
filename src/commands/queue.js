@@ -24,7 +24,7 @@ module.exports = {
 		const currentTrack = queue.currentTrack;
 
 		const tracks = queue.tracks.store.slice(pageStart, pageEnd).map((m, i) => {
-			return `${i + pageStart + 1}. **[${m.title}](${m.url})** - ${m.requestedBy}`;
+			return `${i + pageStart + 1}. **[${m.title}](${m.url})** ${!m.requestedBy ? '' : m.requestedBy}`;
 		});
 
 		return await interaction.reply({ embeds: [{

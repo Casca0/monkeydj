@@ -16,7 +16,7 @@ module.exports = {
 				description: `**[${queue.currentTrack.title}](${queue.currentTrack.url})** - ${queue.currentTrack.author}`,
 				fields: [{
 					name: 'Requisitado por',
-					value: `${queue.currentTrack.requestedBy}`,
+					value: `${!queue.currentTrack.requestedBy ? 'Não encontrei.' : queue.currentTrack.requestedBy}`,
 				}],
 				thumbnail: {
 					url: queue.currentTrack.thumbnail,
