@@ -50,7 +50,6 @@ module.exports = {
 						.setDescription('O user para pesquisar, deixe vazio para ser você!'),
 				),
 		),
-	// eslint-disable-next-line no-unused-vars
 	async execute(interaction, player) {
 		const pb = new PocketBase('https://monkeydj.pockethost.io');
 
