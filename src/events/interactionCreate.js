@@ -9,9 +9,10 @@ module.exports = {
 
 		try {
 			await command.execute(interaction, player);
-		} catch (error) {
-			console.error(error);
-			await interaction.reply({ content: 'Ocorreu um erro ao tentar executar o comando!', ephemeral: true });
+		}
+		catch {
+			console.error;
+			return await interaction.channel.send({ content: 'Ocorreu um erro ao tentar executar o comando!' });
 		}
 	},
 };
