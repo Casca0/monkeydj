@@ -1,3 +1,4 @@
+require('cross-fetch/polyfill');
 const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ComponentType, ActionRowBuilder, ButtonStyle } = require('discord.js');
 
 const { Track } = require('discord-player');
