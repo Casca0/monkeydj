@@ -28,7 +28,7 @@ module.exports = {
 				.addUserOption(option =>
 					option
 						.setName('user')
-						.setDescription('O user para pesquisar, deixe vazio para ser você!'),
+						.setDescription('O user para pesquisar, pode ser você mesmo!'),
 				),
 		)
 		.addSubcommand(subcommand =>
@@ -91,9 +91,11 @@ module.exports = {
 				customId: 'back',
 			});
 
-			const interactionReply = await interaction.reply({ embeds: [trackEmbed], components: [new ActionRowBuilder({
+			await interaction.deferReply();
+
+			const interactionReply = await interaction.followUp({ embeds: [trackEmbed], components: [new ActionRowBuilder({
 				components: [okayButton, backButton],
-			})], ephemeral: true });
+			})] });
 
 			const buttonCollector = interactionReply.createMessageComponentCollector({
 				componentType: ComponentType.Button,
@@ -124,7 +126,7 @@ module.exports = {
 					}
 					catch (err) {
 						console.log(err);
-						return await interaction.followUp({ content: 'Ocorreu um erro ao adicionar a música na playlist.', ephemeral: true });
+						return await interaction.followUp({ content: 'Ocorreu um erro ao adicionar a música na playlist.' });
 					}
 				}
 
@@ -135,17 +137,22 @@ module.exports = {
 		}
 
 		if (command == 'ver') {
-			let user = interaction.options.getUser('user');
+			const user = interaction.options.getUser('user');
 
-			if (!user) user = interaction.user;
+			let getTracks;
+
+			if (!user) {
+				getTracks = await pb.collection('serverplaylist').getFullList();
+			}
+			else {
+				getTracks = await pb.collection('serverplaylist').getFullList(`user_id=${user.id}`);
+			}
+
+			if (getTracks.length === 0) {
+				return await interaction.reply('Não há músicas na playlist do server!');
+			}
 
 			try {
-				const getTracks = await pb.collection('serverplaylist').getFullList(`user_id=${interaction.user.id}`);
-
-				if (getTracks.length === 0) {
-					return await interaction.reply('Este user não tem uma playlist!');
-				}
-
 				const tracks = getTracks.map(record => record.track);
 
 				const backButton = new ButtonBuilder({
@@ -166,13 +173,14 @@ module.exports = {
 					const currentPage = tracks.slice(start, start + 5);
 
 					return new EmbedBuilder({
-						title: `Playlist de ${user.username}`,
+						title: `Playlist do ${user ? user.username : 'servidor'}`,
 						thumbnail: {
-							url: user.avatarURL({ dynamic: true }),
+							url: user ? user.avatarURL({ dynamic: true }) : interaction.guild.iconURL({ dynamic: true }),
 						},
+						description: `**Total : ${tracks.length}**`,
 						fields: await Promise.all(
-							currentPage.map(async (track) => ({
-								name: `**${track.title} - ${track.author}**`,
+							currentPage.map(async (track, index) => ({
+								name: `**${index + start + 1} - ${track.title} - ${track.author}**`,
 								value: `**URL: ${track.url}**`,
 							})),
 						),
@@ -202,7 +210,7 @@ module.exports = {
 
 					intr.customId === 'back' ? (currentIndex -= 5) : (currentIndex += 5);
 
-					await intr.update({
+					return await intr.update({
 						embeds: [await generatePlaylistEmbed(currentIndex)],
 						components: [
 							new ActionRowBuilder({
