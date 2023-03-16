@@ -91,9 +91,11 @@ module.exports = {
 				customId: 'back',
 			});
 
-			const interactionReply = await interaction.reply({ embeds: [trackEmbed], components: [new ActionRowBuilder({
+			await interaction.deferReply();
+
+			const interactionReply = await interaction.followUp({ embeds: [trackEmbed], components: [new ActionRowBuilder({
 				components: [okayButton, backButton],
-			})], ephemeral: true });
+			})] });
 
 			const buttonCollector = interactionReply.createMessageComponentCollector({
 				componentType: ComponentType.Button,
@@ -124,7 +126,7 @@ module.exports = {
 					}
 					catch (err) {
 						console.log(err);
-						return await interaction.followUp({ content: 'Ocorreu um erro ao adicionar a música na playlist.', ephemeral: true });
+						return await interaction.followUp({ content: 'Ocorreu um erro ao adicionar a música na playlist.' });
 					}
 				}
 
