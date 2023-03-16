@@ -64,6 +64,8 @@ module.exports = {
 				console.log(err);
 			});
 
+			if (searchResult.playlist) return await interaction.reply('Não aceito links de playlist!');
+
 			if (searchResult.tracks == [] || searchResult.tracks[0] == undefined) return await interaction.reply({ content: 'Não encontrei a música.', ephemeral: true });
 
 			const trackEmbed = new EmbedBuilder({
