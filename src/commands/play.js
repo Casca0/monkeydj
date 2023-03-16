@@ -10,10 +10,10 @@ module.exports = {
 				.setRequired(true)),
 	async execute(interaction, player) {
 		if (!interaction.member.voice.channelId) {
-			return await interaction.reply({ content: 'Entre num canal de voz primeiro.', ephemeral: true });
+			return await interaction.reply({ content: 'Entre num canal de voz primeiro.' });
 		}
 		if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
-			return await interaction.reply({ content: 'Não estamos no mesmo canal de voz.', ephemeral: true });
+			return await interaction.reply({ content: 'Não estamos no mesmo canal de voz.' });
 		}
 
 		const query = interaction.options.getString('query');
@@ -25,7 +25,7 @@ module.exports = {
 			console.log(err);
 		});
 
-		if (searchResult.tracks == [] || searchResult.tracks[0] == undefined) return await interaction.reply({ content: 'Não encontrei a música.', ephemeral: true });
+		if (searchResult.tracks == [] || searchResult.tracks[0] == undefined) return await interaction.reply({ content: 'Não encontrei a música.' });
 
 		const queue = player.nodes.create(interaction.guild, {
 			volume: false,
@@ -48,13 +48,26 @@ module.exports = {
 		catch (err) {
 			console.log(err);
 			queue.delete();
-			return await interaction.reply({ content: 'Não consegui me conectar ao canal.', ephemeral: true });
+			return await interaction.reply({ content: 'Não consegui me conectar ao canal.' });
 		}
 
-		await interaction.reply({ content: `Carregando a ${searchResult.playlist ? `playlist **${searchResult.playlist.title}**` : `música **${searchResult.tracks[0].title}**`}`, ephemeral: true });
+		await interaction.reply({ content: `Carregando a ${searchResult.playlist ? `playlist **${searchResult.playlist.title}**` : `música **${searchResult.tracks[0].title}**`}` });
 
 		searchResult.playlist ? queue.addTrack(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
 
-		if (!queue.node.isPlaying()) await queue.node.play();
+		try {
+			if (!queue.node.isPlaying()) {
+				await queue.node.play();
+				await interaction.followUp('Player iniciado.');
+			}
+			else {
+				return;
+			}
+		}
+		catch (err) {
+			console.log(err);
+			await interaction.followUp('Não foi possível iniciar o player.');
+		}
+
 	},
 };
