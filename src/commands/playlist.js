@@ -1,4 +1,3 @@
-require('cross-fetch/polyfill');
 const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ComponentType, ActionRowBuilder, ButtonStyle } = require('discord.js');
 
 const { Track } = require('discord-player');
@@ -56,18 +55,33 @@ module.exports = {
 
 		const command = interaction.options.getSubcommand();
 
+		async function searchDuplicate(songTitle) {
+			try {
+				await pb.collection('serverplaylist').getFirstListItem(`track.title="${songTitle}"`);
+
+				return true;
+			}
+			catch {
+				return false;
+			}
+		}
+
 		if (command == 'adicionar') {
 			const query = interaction.options.getString('query');
 
 			const searchResult = await player.search(query, {
 				searchEngine: 'auto',
-			}).catch((err) => {
+			}).then(res => res.toJSON()).catch((err) => {
 				console.log(err);
 			});
 
 			if (searchResult.playlist) return await interaction.reply('Não aceito links de playlist!');
 
-			if (searchResult.tracks == [] || searchResult.tracks[0] == undefined) return await interaction.reply({ content: 'Não encontrei a música.', ephemeral: true });
+			if (searchResult.tracks.length == 0) return await interaction.reply({ content: 'Não encontrei a música.', ephemeral: true });
+
+			const getDuplicate = await searchDuplicate(searchResult.tracks[0].title);
+
+			if (getDuplicate) return await interaction.reply({ content: 'Está música já existe na playlist!', ephemeral: true });
 
 			const trackEmbed = new EmbedBuilder({
 				title: 'É essa música?',
@@ -107,7 +121,7 @@ module.exports = {
 				if (intr.customId == 'okay') {
 					const data = {
 						user_id: interaction.user.id,
-						track: searchResult.tracks[0].raw,
+						track: searchResult.tracks[0],
 					};
 
 					try {
@@ -126,7 +140,7 @@ module.exports = {
 					}
 					catch (err) {
 						console.log(err);
-						return await interaction.followUp({ content: 'Ocorreu um erro ao adicionar a música na playlist.' });
+						return await intr.update({ content: 'Ocorreu um erro ao adicionar a música na playlist.', embeds: [], components: [] });
 					}
 				}
 
@@ -149,7 +163,7 @@ module.exports = {
 			}
 
 			if (getTracks.length === 0) {
-				return await interaction.reply('Não há músicas na playlist do server!');
+				return await interaction.reply('Não há músicas na playlist do server ou desse user!');
 			}
 
 			try {
