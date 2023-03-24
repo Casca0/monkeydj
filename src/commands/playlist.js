@@ -173,12 +173,14 @@ module.exports = {
 			}
 			else {
 				getTracks = await pb.collection('serverplaylist').getFullList({
-					filter: `user_id=${interaction.user.id}`,
+					filter: `user_id=${user.id}`,
 				});
 			}
 
+			await interaction.deferReply();
+
 			if (getTracks.length === 0) {
-				return await interaction.reply('Não há músicas na playlist do server ou desse user!');
+				return await interaction.followUp('Não há músicas na playlist do server ou desse user!');
 			}
 
 			try {
@@ -207,10 +209,11 @@ module.exports = {
 							url: user ? user.avatarURL({ dynamic: true }) : interaction.guild.iconURL({ dynamic: true }),
 						},
 						description: `**Total : ${tracks.length}**`,
-						fields: await Promise.all(
+						fields:
+						await Promise.all(
 							currentPage.map(async (track, index) => ({
-								name: `**${index + start + 1} - ${track.title} - ${track.author}**`,
-								value: `**URL: ${track.url}**`,
+								name: '\u200B',
+								value: `**${index + start + 1} - [${track.title}](${track.url}) - ${track.author}**`,
 							})),
 						),
 						color: 0xa834eb,
@@ -219,7 +222,7 @@ module.exports = {
 
 				const canFitInOnePage = tracks.length <= 5;
 
-				const interactionReply = await interaction.reply({
+				const interactionReply = await interaction.followUp({
 					embeds: [await generatePlaylistEmbed(0)],
 					components: canFitInOnePage ? [] : [new ActionRowBuilder({
 						components: [forwardButton],
@@ -254,7 +257,7 @@ module.exports = {
 			}
 			catch (err) {
 				console.log(err);
-				return await interaction.reply({ content: 'Ocorreu um erro ao tentar exibir a playlist.', ephemeral: true });
+				return await interaction.followUp({ content: 'Ocorreu um erro ao tentar exibir a playlist.', ephemeral: true });
 			}
 		}
 
