@@ -49,6 +49,17 @@ module.exports = {
 						.setName('user')
 						.setDescription('O user para pesquisar, deixe vazio para ser você!'),
 				),
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('remover')
+				.setDescription('Remover uma música da sua playlist.')
+				.addIntegerOption(option =>
+					option
+						.setName('index')
+						.setDescription('Posição da música na playlist.')
+						.setRequired(true),
+				),
 		),
 	async execute(interaction, player) {
 		const pb = new PocketBase('https://monkeydj.pockethost.io');
@@ -57,7 +68,9 @@ module.exports = {
 
 		async function searchDuplicate(songTitle) {
 			try {
-				await pb.collection('serverplaylist').getFirstListItem(`track.title="${songTitle}"`);
+				await pb.collection('serverplaylist').getFirstListItem({
+					filter:`track.title="${songTitle}"`,
+				});
 
 				return true;
 			}
@@ -75,13 +88,15 @@ module.exports = {
 				console.log(err);
 			});
 
-			if (searchResult.playlist) return await interaction.reply('Não aceito links de playlist!');
+			await interaction.deferReply();
 
-			if (searchResult.tracks.length == 0) return await interaction.reply({ content: 'Não encontrei a música.', ephemeral: true });
+			if (searchResult.playlist) return await interaction.followUp('Não aceito links de playlist!');
+
+			if (searchResult.tracks.length == 0) return await interaction.followUp({ content: 'Não encontrei a música.', ephemeral: true });
 
 			const getDuplicate = await searchDuplicate(searchResult.tracks[0].title);
 
-			if (getDuplicate) return await interaction.reply({ content: 'Está música já existe na playlist!', ephemeral: true });
+			if (getDuplicate) return await interaction.followUp({ content: 'Está música já existe na playlist!', ephemeral: true });
 
 			const trackEmbed = new EmbedBuilder({
 				title: 'É essa música?',
@@ -104,8 +119,6 @@ module.exports = {
 				emoji: '👎',
 				customId: 'back',
 			});
-
-			await interaction.deferReply();
 
 			const interactionReply = await interaction.followUp({ embeds: [trackEmbed], components: [new ActionRowBuilder({
 				components: [okayButton, backButton],
@@ -159,7 +172,9 @@ module.exports = {
 				getTracks = await pb.collection('serverplaylist').getFullList();
 			}
 			else {
-				getTracks = await pb.collection('serverplaylist').getFullList(`user_id=${user.id}`);
+				getTracks = await pb.collection('serverplaylist').getFullList({
+					filter: `user_id=${interaction.user.id}`,
+				});
 			}
 
 			if (getTracks.length === 0) {
@@ -289,7 +304,9 @@ module.exports = {
 			if (!user) user = interaction.user;
 
 			try {
-				const getTracks = await pb.collection('serverplaylist').getFullList(`user_id=${interaction.user.id}`);
+				const getTracks = await pb.collection('serverplaylist').getFullList({
+					filter: `user_id=${interaction.user.id}`,
+				});
 
 				if (getTracks.length === 0) {
 					return await interaction.reply('Este user não tem uma playlist!');
@@ -312,6 +329,68 @@ module.exports = {
 			if (!queue.node.isPlaying()) return await queue.node.play();
 
 			return await interaction.followUp({ content: 'Playlist carregada!' });
+		}
+
+		if (command == 'remover') {
+			const index = interaction.options.getInteger('index');
+
+			await interaction.deferReply();
+
+			const getTracks = await pb.collection('serverplaylist').getFullList({
+				filter: `user_id=${interaction.user.id}`,
+			});
+
+			const track = getTracks[index - 1].track;
+
+			if (!track) return await interaction.followUp('Não existe essa música na sua playlist.');
+
+			const trackEmbed = new EmbedBuilder({
+				title: 'Tem certeza que quer remover essa música?',
+				description: `**[${track.title}](${track.url}) - ${track.author}**`,
+				thumbnail: {
+					url: track.thumbnail,
+				},
+				color: 0xff0000,
+			});
+
+			const okayButton = new ButtonBuilder({
+				style: ButtonStyle.Success,
+				label: 'Sim',
+				customId: 'okay',
+			});
+			const backButton = new ButtonBuilder({
+				style: ButtonStyle.Danger,
+				label: 'Não',
+				customId: 'back',
+			});
+
+			const interactionReply = await interaction.followUp({ embeds: [trackEmbed], components: [new ActionRowBuilder({
+				components: [okayButton, backButton],
+			})] });
+
+			const buttonCollector = interactionReply.createMessageComponentCollector({
+				componentType: ComponentType.Button,
+			});
+
+			buttonCollector.on('collect', async intr => {
+				if (intr.user.id != interaction.user.id) return;
+
+				if (intr.customId == 'okay') {
+					try {
+						await pb.collection('serverplaylist').delete(`${getTracks[index - 1].id}`);
+
+						return await intr.update({ content: 'Música removida da playlist!', embeds: [], components: [] });
+					}
+					catch (err) {
+						console.log(err);
+						return await intr.update({ content: 'Ocorreu um erro ao remover a música da playlist.', embeds: [], components: [] });
+					}
+				}
+
+				if (intr.customId == 'back') {
+					return await intr.update({ content: 'Okay, tente novamente!', embeds: [], components: [] });
+				}
+			});
 		}
 	},
 };

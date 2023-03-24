@@ -12,7 +12,8 @@ module.exports = {
 		}
 		catch {
 			console.error;
-			return await interaction.channel.send({ content: 'Ocorreu um erro ao tentar executar o comando!' });
+			if (interaction.deferred) return await interaction.followUp('Ocorreu um erro ao tentar executar o comando.');
+			return await interaction.reply('Ocorreu um erro ao tentar executar o comando!');
 		}
 	},
 };
