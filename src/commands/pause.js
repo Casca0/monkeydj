@@ -1,17 +1,20 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { useMasterPlayer } = require('discord-player');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('pause')
 		.setDescription('Pausa a música atual.'),
-	async execute(interaction, player) {
+	execute(interaction) {
+		const player = useMasterPlayer();
+
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
-			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
-		const paused = await queue.node.pause();
+		const paused = queue.node.pause();
 
-		return await interaction.reply({ content: paused ? 'Música pausada.' : 'Algo deu errado!' });
+		return interaction.followUp({ content: paused ? 'Música pausada.' : 'Algo deu errado!' });
 	},
 };

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ComponentType, ActionRowBuilder, ButtonStyle } = require('discord.js');
 
-const { Track } = require('discord-player');
+const { Track, useMasterPlayer } = require('discord-player');
 
 const PocketBase = require('pocketbase/cjs');
 
@@ -61,23 +61,25 @@ module.exports = {
 						.setRequired(true),
 				),
 		),
-	async execute(interaction, player) {
+	async execute(interaction) {
+		const player = useMasterPlayer();
+
 		const pb = new PocketBase('https://monkeydj.pockethost.io');
 
 		const command = interaction.options.getSubcommand();
 
 		async function searchDuplicate(songTitle) {
 			try {
-				await pb.collection('serverplaylist').getFirstListItem({
-					filter:`track.title="${songTitle}"`,
-				});
+				await pb.collection('serverplaylist').getFirstListItem(`track.title="${songTitle}"`);
 
 				return true;
 			}
-			catch {
+			catch (e) {
+				console.log(`Não encontrei : ${e}`);
 				return false;
 			}
 		}
+
 
 		if (command == 'adicionar') {
 			const query = interaction.options.getString('query');
@@ -88,15 +90,14 @@ module.exports = {
 				console.log(err);
 			});
 
-			await interaction.deferReply();
 
-			if (searchResult.playlist) return await interaction.followUp('Não aceito links de playlist!');
+			if (searchResult.playlist) return interaction.followUp('Não aceito links de playlist!');
 
-			if (searchResult.tracks.length == 0) return await interaction.followUp({ content: 'Não encontrei a música.', ephemeral: true });
+			if (searchResult.tracks.length == 0) return interaction.followUp({ content: 'Não encontrei a música.', ephemeral: true });
 
 			const getDuplicate = await searchDuplicate(searchResult.tracks[0].title);
 
-			if (getDuplicate) return await interaction.followUp({ content: 'Está música já existe na playlist!', ephemeral: true });
+			if (getDuplicate) return interaction.followUp({ content: 'Está música já existe na playlist!', ephemeral: true });
 
 			const trackEmbed = new EmbedBuilder({
 				title: 'É essa música?',
@@ -149,16 +150,16 @@ module.exports = {
 							color: 0x42f5ad,
 						});
 
-						return await intr.update({ embeds: [embed], components: [] });
+						return intr.update({ embeds: [embed], components: [] });
 					}
 					catch (err) {
 						console.log(err);
-						return await intr.update({ content: 'Ocorreu um erro ao adicionar a música na playlist.', embeds: [], components: [] });
+						return intr.update({ content: 'Ocorreu um erro ao adicionar a música na playlist.', embeds: [], components: [] });
 					}
 				}
 
 				if (intr.customId == 'back') {
-					return await intr.update({ content: 'Okay, pesquise novamente!', embeds: [], components: [] });
+					return intr.update({ content: 'Okay, pesquise novamente!', embeds: [], components: [] });
 				}
 			});
 		}
@@ -177,10 +178,8 @@ module.exports = {
 				});
 			}
 
-			await interaction.deferReply();
-
 			if (getTracks.length === 0) {
-				return await interaction.followUp('Não há músicas na playlist do server ou desse user!');
+				return interaction.followUp('Não há músicas na playlist do server ou desse user!');
 			}
 
 			try {
@@ -242,7 +241,7 @@ module.exports = {
 
 					intr.customId === 'back' ? (currentIndex -= 5) : (currentIndex += 5);
 
-					return await intr.update({
+					return intr.update({
 						embeds: [await generatePlaylistEmbed(currentIndex)],
 						components: [
 							new ActionRowBuilder({
@@ -257,7 +256,7 @@ module.exports = {
 			}
 			catch (err) {
 				console.log(err);
-				return await interaction.followUp({ content: 'Ocorreu um erro ao tentar exibir a playlist.', ephemeral: true });
+				return interaction.followUp({ content: 'Ocorreu um erro ao tentar exibir a playlist.', ephemeral: true });
 			}
 		}
 
@@ -289,19 +288,20 @@ module.exports = {
 					const tracks = getTracks.map(record => new Track(player, record.track));
 
 					queue.addTrack(tracks);
+					queue.tracks.shuffle();
 					if (!queue.connection) await queue.connect(interaction.member.voice.channel);
 				}
 				catch (err) {
 					console.log(err);
 					queue.delete();
-					return await interaction.reply({ content: 'Ocorreu um erro ao tentar tocar a playlist.', ephemeral: true });
+					return interaction.followUp({ content: 'Ocorreu um erro ao tentar tocar a playlist.', ephemeral: true });
 				}
 
-				await interaction.reply({ content: 'Carregando a playlist do servidor...' });
+				interaction.followUp({ content: 'Carregando a playlist do servidor...' });
 
-				if (!queue.node.isPlaying()) return await queue.node.play();
+				if (!queue.node.isPlaying()) await queue.node.play();
 
-				return await interaction.followUp({ content: 'Playlist carregada!' });
+				return interaction.followUp({ content: 'Playlist carregada!' });
 			}
 
 			if (!user) user = interaction.user;
@@ -312,32 +312,31 @@ module.exports = {
 				});
 
 				if (getTracks.length === 0) {
-					return await interaction.reply('Este user não tem uma playlist!');
+					return interaction.followUp('Este user não tem uma playlist!');
 				}
 
 				const tracks = getTracks.map(record => new Track(player, record.track));
 
 				queue.addTrack(tracks);
+				queue.tracks.shuffle();
 
 				if (!queue.connection) await queue.connect(interaction.member.voice.channel);
 			}
 			catch (err) {
 				console.log(err);
 				queue.delete();
-				return await interaction.reply({ content: 'Ocorreu um erro ao tentar tocar a playlist.', ephemeral: true });
+				return interaction.followUp({ content: 'Ocorreu um erro ao tentar tocar a playlist.', ephemeral: true });
 			}
 
-			await interaction.reply({ content: `Carregando a playlist de ${user}...` });
+			interaction.followUp({ content: `Carregando a playlist de ${user}...` });
 
 			if (!queue.node.isPlaying()) return await queue.node.play();
 
-			return await interaction.followUp({ content: 'Playlist carregada!' });
+			return interaction.followUp({ content: 'Playlist carregada!' });
 		}
 
 		if (command == 'remover') {
 			const index = interaction.options.getInteger('index');
-
-			await interaction.deferReply();
 
 			const getTracks = await pb.collection('serverplaylist').getFullList({
 				filter: `user_id=${interaction.user.id}`,
@@ -345,7 +344,7 @@ module.exports = {
 
 			const track = getTracks[index - 1].track;
 
-			if (!track) return await interaction.followUp('Não existe essa música na sua playlist.');
+			if (!track) return interaction.followUp('Não existe essa música na sua playlist.');
 
 			const trackEmbed = new EmbedBuilder({
 				title: 'Tem certeza que quer remover essa música?',
@@ -382,16 +381,16 @@ module.exports = {
 					try {
 						await pb.collection('serverplaylist').delete(`${getTracks[index - 1].id}`);
 
-						return await intr.update({ content: 'Música removida da playlist!', embeds: [], components: [] });
+						return intr.update({ content: 'Música removida da playlist!', embeds: [], components: [] });
 					}
 					catch (err) {
 						console.log(err);
-						return await intr.update({ content: 'Ocorreu um erro ao remover a música da playlist.', embeds: [], components: [] });
+						return intr.update({ content: 'Ocorreu um erro ao remover a música da playlist.', embeds: [], components: [] });
 					}
 				}
 
 				if (intr.customId == 'back') {
-					return await intr.update({ content: 'Okay, tente novamente!', embeds: [], components: [] });
+					return intr.update({ content: 'Okay, tente novamente!', embeds: [], components: [] });
 				}
 			});
 		}

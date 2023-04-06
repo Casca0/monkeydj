@@ -1,19 +1,20 @@
 module.exports = {
 	name: 'interactionCreate',
-	async execute(interaction, client, player) {
+	async execute(interaction, client) {
 		if (!interaction.isChatInputCommand()) return;
 
 		const command = client.commands.get(interaction.commandName);
 
 		if (!command) return;
 
+		await interaction.deferReply();
+
 		try {
-			await command.execute(interaction, player);
+			await command.execute(interaction);
 		}
-		catch {
-			console.error;
-			if (interaction.deferred) return await interaction.followUp('Ocorreu um erro ao tentar executar o comando.');
-			return await interaction.reply('Ocorreu um erro ao tentar executar o comando!');
+		catch (e) {
+			console.error(e);
+			return await interaction.followUp(`Ocorreu um erro : ${e}`);
 		}
 	},
 };

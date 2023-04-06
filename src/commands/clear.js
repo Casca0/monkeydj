@@ -1,15 +1,18 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { useMasterPlayer } = require('discord-player');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('clear')
 		.setDescription('Limpa a fila de música.'),
-	async execute(interaction, player) {
+	execute(interaction) {
+		const player = useMasterPlayer();
+
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
-			return await interaction.reply({ content: 'Nenhuma música na fila!', ephemeral: true });
+			return interaction.followUp({ content: 'Nenhuma música na fila!', ephemeral: true });
 		}
 		queue.tracks.clear();
-		return await interaction.reply({ content: 'Fila de músicas excluída!' });
+		return interaction.followUp({ content: 'Fila de músicas excluída!' });
 	},
 };

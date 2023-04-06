@@ -9,12 +9,15 @@ const { Player } = require('discord-player');
 
 const token = process.env.DISCORD_TOKEN;
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMembers] });
 
 // Música
 
-const player = new Player(client, {
+const player = Player.singleton(client, {
+	smoothVolume: false,
 	ytdlOptions: {
+		lang: 'pt-br',
+		liveBuffer: 10000,
 		filter: 'audioonly',
 		quality: 'highestaudio',
 		highWaterMark: 1 << 25,
@@ -53,7 +56,7 @@ for (const file of eventsFiles) {
 		client.once(event.name, (...args) => event.execute(...args));
 	}
 	else {
-		client.on(event.name, (...args) => event.execute(...args, client, player));
+		client.on(event.name, (...args) => event.execute(...args, client));
 	}
 }
 

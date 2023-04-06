@@ -1,14 +1,17 @@
 const { SlashCommandBuilder, ButtonBuilder, EmbedBuilder, ComponentType, ActionRowBuilder, ButtonStyle } = require('discord.js');
+const { useMasterPlayer } = require('discord-player');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('queue')
 		.setDescription('Mostra a fila de música atual.'),
-	async execute(interaction, player) {
+	async execute(interaction) {
+		const player = useMasterPlayer();
+
 		const queue = player.nodes.get(interaction.guild.id);
 
 		if (!queue) {
-			return await interaction.reply({ content: 'Nenhuma música na fila!', ephemeral: true });
+			return interaction.followUp({ content: 'Nenhuma música na fila!', ephemeral: true });
 		}
 
 		const currentTrack = queue.currentTrack;
@@ -50,7 +53,7 @@ module.exports = {
 
 		const canFitInOnePage = tracks.length <= totalItensInPage;
 
-		const interactionReply = await interaction.reply({
+		const interactionReply = await interaction.followUp({
 			embeds: [await generatePlaylistEmbed(0)],
 			components: canFitInOnePage ? [] : [new ActionRowBuilder({
 				components: [forwardButton],
@@ -70,7 +73,7 @@ module.exports = {
 
 			intr.customId === 'back' ? (currentIndex -= totalItensInPage) : (currentIndex += totalItensInPage);
 
-			return await intr.update({
+			return intr.update({
 				embeds: [await generatePlaylistEmbed(currentIndex)],
 				components: [
 					new ActionRowBuilder({

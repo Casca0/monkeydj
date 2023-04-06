@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { useMasterPlayer } = require('discord-player');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,10 +9,12 @@ module.exports = {
 			option.setName('query')
 				.setDescription('A música que você quer no topo da fila (URL ou nome).')
 				.setRequired(true)),
-	async execute(interaction, player) {
+	async execute(interaction) {
+		const player = useMasterPlayer();
+
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
-			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
 		const query = interaction.options.getString('query');
@@ -22,10 +25,10 @@ module.exports = {
 		});
 
 		if (!searchResult || !searchResult.tracks.length) {
-			return await interaction.reply({ content: `Não encontrei a música (**${query}**).`, ephemeral: true });
+			return interaction.followUp({ content: `Não encontrei a música (**${query}**).`, ephemeral: true });
 		}
 		queue.insertTrack(searchResult.tracks[0]);
 
-		return await interaction.reply({ content: `Carregando a música **${searchResult.tracks[0].title}**`, ephemeral: true });
+		return interaction.followUp({ content: `Carregando a música **${searchResult.tracks[0].title}**`, ephemeral: true });
 	},
 };

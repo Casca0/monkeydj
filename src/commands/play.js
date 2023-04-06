@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 
+const { useMasterPlayer, QueryType } = require('discord-player');
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('play')
@@ -8,24 +10,28 @@ module.exports = {
 			option.setName('query')
 				.setDescription('URL ou nome da música.')
 				.setRequired(true)),
-	async execute(interaction, player) {
+	async execute(interaction) {
+		const channel = interaction.member.voice.channel;
+
 		if (!interaction.member.voice.channelId) {
-			return await interaction.reply({ content: 'Entre num canal de voz primeiro.' });
+			return interaction.followUp({ content: 'Entre num canal de voz primeiro.' });
 		}
 		if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
-			return await interaction.reply({ content: 'Não estamos no mesmo canal de voz.' });
+			return interaction.followUp({ content: 'Não estamos no mesmo canal de voz.' });
 		}
+
+		const player = useMasterPlayer();
 
 		const query = interaction.options.getString('query');
 
 		const searchResult = await player.search(query, {
 			requestedBy: interaction.user,
-			searchEngine: 'auto',
+			searchEngine: QueryType.AUTO,
 		}).catch((err) => {
 			console.log(err);
 		});
 
-		if (searchResult.tracks == [] || searchResult.tracks[0] == undefined) return await interaction.reply({ content: 'Não encontrei a música.' });
+		if (searchResult.tracks.length == 0) return interaction.followUp('Não encontrei a música.');
 
 		const queue = player.nodes.create(interaction.guild, {
 			volume: false,
@@ -43,30 +49,30 @@ module.exports = {
 		});
 
 		try {
-			if (!queue.connection) await queue.connect(interaction.member.voice.channel);
+			if (!queue.connection) await queue.connect(channel);
 		}
-		catch (err) {
-			console.log(err);
+		catch (e) {
+			console.error(e);
 			queue.delete();
-			return await interaction.reply({ content: 'Não consegui me conectar ao canal.' });
+			return interaction.followUp(`Ocorreu um erro ao me conectar no canal: ${e}`);
 		}
 
-		await interaction.reply({ content: `Carregando a ${searchResult.playlist ? `playlist **${searchResult.playlist.title}**` : `música **${searchResult.tracks[0].title}**`}` });
+		await interaction.followUp({ content: `Carregando a ${searchResult.playlist ? `playlist **${searchResult.playlist.title}**` : `música **${searchResult.tracks[0].title}**`}` });
 
 		searchResult.playlist ? queue.addTrack(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
 
 		try {
 			if (!queue.node.isPlaying()) {
 				await queue.node.play();
-				await interaction.followUp('Player iniciado.');
+				return interaction.followUp('Player iniciado.');
 			}
 			else {
 				return;
 			}
 		}
-		catch (err) {
-			console.log(err);
-			await interaction.followUp('Não foi possível iniciar o player.');
+		catch (e) {
+			console.error(e);
+			return interaction.followUp(`Ocorreu o seguinte erro : ${e}`);
 		}
 
 	},

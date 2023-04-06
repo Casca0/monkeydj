@@ -1,16 +1,19 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { useMasterPlayer } = require('discord-player');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('np')
 		.setDescription('Mostra a música que está tocando atualmente.'),
-	async execute(interaction, player) {
+	execute(interaction) {
+		const player = useMasterPlayer();
+
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
-			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
-		return await interaction.reply({ embeds: [
+		return interaction.followUp({ embeds: [
 			{
 				title: 'Tocando agora',
 				description: `**[${queue.currentTrack.title}](${queue.currentTrack.url})** - ${queue.currentTrack.author}`,

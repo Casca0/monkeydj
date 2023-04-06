@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { useMasterPlayer } = require('discord-player');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,10 +9,12 @@ module.exports = {
 			option.setName('músicas')
 				.setDescription('Número de músicas para pular da fila.')
 				.setRequired(true)),
-	async execute(interaction, player) {
+	execute(interaction) {
+		const player = useMasterPlayer();
+
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
-			return await interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
 		const indexOption = interaction.options.getInteger('músicas');
@@ -25,8 +28,8 @@ module.exports = {
 		}
 		catch (err) {
 			console.log(err);
-			return await interaction.reply({ content: 'Ocorreu um erro ao pular de música' });
+			return interaction.followUp(`Ocorreu o seguinte erro ao pular de música : ${err}`);
 		}
-		return await interaction.reply({ content: `Pulando para **${trackName}**.` });
+		return interaction.followUp({ content: `Pulando para **${trackName}**.` });
 	},
 };
