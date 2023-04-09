@@ -29,5 +29,20 @@ module.exports = {
 				return await interaction.followUp(`Ocorreu um erro\n${e}`);
 			}
 		}
+		else if (interaction.isUserContextMenuCommand()) {
+			const command = client.commands.get(interaction.commandName);
+
+			if (!command) return;
+
+			await interaction.deferReply();
+
+			try {
+				await command.execute(interaction);
+			}
+			catch (e) {
+				console.error(e);
+				return await interaction.followUp(`Ocorreu um erro\n${e}`);
+			}
+		}
 	},
 };
