@@ -308,7 +308,7 @@ module.exports = {
 
 			try {
 				const getTracks = await pb.collection('serverplaylist').getFullList({
-					filter: `user_id=${interaction.user.id}`,
+					filter: `user_id=${user.id}`,
 				});
 
 				if (getTracks.length === 0) {
