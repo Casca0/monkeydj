@@ -19,7 +19,7 @@ module.exports = {
 
 		await interaction.respond(
 			results.tracks.slice(0, 5).map((t) => ({
-				name: t.title,
+				name: `${t.title} - ${t.author}`,
 				value: t.url,
 			})),
 		);
