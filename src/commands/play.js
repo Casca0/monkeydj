@@ -9,7 +9,21 @@ module.exports = {
 		.addStringOption((option) =>
 			option.setName('query')
 				.setDescription('URL ou nome da música.')
-				.setRequired(true)),
+				.setRequired(true)
+				.setAutocomplete(true),
+		),
+	async autocomplete(interaction) {
+		const player = useMasterPlayer();
+		const query = interaction.options.getFocused();
+		const results = await player.search(query);
+
+		await interaction.respond(
+			results.tracks.slice(0, 5).map((t) => ({
+				name: t.title,
+				value: t.url,
+			})),
+		);
+	},
 	async execute(interaction) {
 		const channel = interaction.member.voice.channel;
 
@@ -31,7 +45,7 @@ module.exports = {
 			console.log(err);
 		});
 
-		if (searchResult.tracks.length == 0) return interaction.followUp('Não encontrei a música.');
+		if (!searchResult.hasTracks()) return interaction.followUp('Não encontrei a música.');
 
 		const queue = player.nodes.create(interaction.guild, {
 			volume: false,
