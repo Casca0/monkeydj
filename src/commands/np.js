@@ -9,6 +9,7 @@ module.exports = {
 		const player = useMasterPlayer();
 
 		const queue = player.nodes.get(interaction.guild.id);
+
 		if (!queue || !queue.node.isPlaying()) {
 			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
@@ -17,10 +18,16 @@ module.exports = {
 			{
 				title: 'Tocando agora',
 				description: `**[${queue.currentTrack.title}](${queue.currentTrack.url})** - ${queue.currentTrack.author}`,
-				fields: [{
-					name: 'Requisitado por',
-					value: `${!queue.currentTrack.requestedBy ? 'Não encontrei.' : queue.currentTrack.requestedBy}`,
-				}],
+				fields: [
+					{
+						name: 'Requisitado por',
+						value: `${!queue.currentTrack.requestedBy ? 'Não encontrei.' : queue.currentTrack.requestedBy}`,
+					},
+					{
+						name: 'Progresso',
+						value: `${queue.node.createProgressBar()}`,
+					},
+				],
 				thumbnail: {
 					url: queue.currentTrack.thumbnail,
 				},

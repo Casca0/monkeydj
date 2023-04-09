@@ -14,7 +14,7 @@ module.exports = {
 		}
 		catch (e) {
 			console.error(e);
-			return await interaction.followUp(`Ocorreu um erro : ${e}`);
+			return await interaction.followUp(`Ocorreu um erro\n${e}`);
 		}
 	},
 };
