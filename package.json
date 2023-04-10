@@ -4,7 +4,6 @@
 	"description": "",
 	"main": "src/index.js",
 	"scripts": {
-		"dev": "node src/utils/dev-deploy.js && node .",
 		"prestart": "node src/utils/prod-deploy.js",
 		"start": "node ."
 	},
