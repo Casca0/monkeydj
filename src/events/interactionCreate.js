@@ -11,7 +11,7 @@ module.exports = {
 			}
 			catch (e) {
 				console.error(e);
-				return interaction.followUp(`Ocorreu um erro\n${e}`);
+				return interaction.channel.send(`Ocorreu um erro\n${e}`);
 			}
 		}
 		else if (interaction.isChatInputCommand()) {

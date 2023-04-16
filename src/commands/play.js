@@ -6,7 +6,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('play')
 		.setDescription('Envie uma URL para tocar música.')
-		.addStringOption((option) =>
+		.addStringOption(option =>
 			option.setName('query')
 				.setDescription('URL ou nome da música.')
 				.setRequired(true)
@@ -14,14 +14,18 @@ module.exports = {
 		),
 	async autocomplete(interaction) {
 		const player = useMasterPlayer();
-		const query = interaction.options.getFocused();
-		const results = await player.search(query);
+		const query = interaction.options.getString('query');
+		const results = await player.search(query, {
+			searchEngine: QueryType.YOUTUBE,
+		});
+
+		const tracks = results.tracks.slice(0, 10).map((t) => ({
+			name: t.title,
+			value: t.url,
+		}));
 
 		await interaction.respond(
-			results.tracks.slice(0, 5).map((t) => ({
-				name: `${t.title} - ${t.author}`,
-				value: t.url,
-			})),
+			tracks,
 		);
 	},
 	async execute(interaction) {
@@ -40,7 +44,6 @@ module.exports = {
 
 		const searchResult = await player.search(query, {
 			requestedBy: interaction.user,
-			searchEngine: QueryType.AUTO,
 		}).catch((err) => {
 			console.log(err);
 		});
