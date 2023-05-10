@@ -2,6 +2,7 @@
 
 require('dotenv').config();
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const extractors = require('@discord-player/extractor');
 const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
@@ -24,6 +25,10 @@ const player = Player.singleton(client, {
 		dlChunkSize: 0,
 	},
 });
+
+player.extractors.register(extractors.SoundCloudExtractor);
+player.extractors.register(extractors.SpotifyExtractor);
+player.extractors.register(extractors.YouTubeExtractor);
 
 // Manipulador de comandos
 
