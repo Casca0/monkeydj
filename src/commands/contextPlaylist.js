@@ -4,7 +4,7 @@ const PocketBase = require('pocketbase/cjs');
 
 module.exports = {
 	data: new ContextMenuCommandBuilder()
-		.setName('verplaylist')
+		.setName('Ver playlist')
 		.setType(ApplicationCommandType.User),
 	async execute(interaction) {
 		const pb = new PocketBase('https://monkeydj.pockethost.io');

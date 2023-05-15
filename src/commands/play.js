@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-const { useMasterPlayer, QueryType } = require('discord-player');
+const { useMasterPlayer } = require('discord-player');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,7 +16,8 @@ module.exports = {
 		const player = useMasterPlayer();
 		const query = interaction.options.getString('query');
 		const results = await player.search(query, {
-			searchEngine: QueryType.YOUTUBE,
+			fallbackSearchEngine: 'spotifySearch',
+			searchEngine: 'youtubeSearch',
 		});
 
 		const tracks = results.tracks.slice(0, 10).map((t) => ({
@@ -43,6 +44,7 @@ module.exports = {
 		const query = interaction.options.getString('query');
 
 		const searchResult = await player.search(query, {
+			fallbackSearchEngine: 'spotifySearch',
 			requestedBy: interaction.user,
 		}).catch((err) => {
 			console.log(err);
@@ -76,7 +78,13 @@ module.exports = {
 
 		await interaction.followUp({ content: `Carregando a ${searchResult.playlist ? `playlist **${searchResult.playlist.title}**` : `música **${searchResult.tracks[0].title}**`}` });
 
-		searchResult.playlist ? queue.addTrack(searchResult.tracks) : queue.addTrack(searchResult.tracks[0]);
+		if (searchResult.playlist) {
+			queue.addTrack(searchResult.tracks);
+			queue.tracks.shuffle();
+		}
+		else {
+			queue.addTrack(searchResult.tracks[0]);
+		}
 
 		try {
 			if (!queue.node.isPlaying()) {

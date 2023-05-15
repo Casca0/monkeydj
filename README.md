@@ -4,8 +4,6 @@ Este bot foi criado com o objetivo de ser o principal bot de música dentro do m
 
 Utilizando [`discord.js`](https://discord.js.org/#/) e [`discord-player`](https://discord-player.js.org/).
 
-![Versão Node](https://img.shields.io/badge/Node-LTS-brightgreen?style=flat-square&logo=nodedotjs&logoColor=white)
-![Versão Discord.js](https://img.shields.io/badge/Discord.js-14.2.0-blue?style=flat-square&logo=discord&logoColor=white)
 [![GitHub stars](https://img.shields.io/github/stars/Casca0/monkeybrain?label=Stars&logo=github&logoColor=white&style=flat-square)](https://github.com/Casca0/monkeybrain/stargazers)
 
 # Índice

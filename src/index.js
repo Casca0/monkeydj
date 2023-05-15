@@ -18,11 +18,10 @@ const player = Player.singleton(client, {
 	smoothVolume: false,
 	ytdlOptions: {
 		lang: 'pt-br',
-		liveBuffer: 10000,
 		filter: 'audioonly',
-		quality: 'highestaudio',
-		highWaterMark: 1 << 25,
-		dlChunkSize: 0,
+		quality: 'highest',
+		highWaterMark: 1 << 80,
+		dlChunkSize: 2,
 	},
 });
 
@@ -77,6 +76,6 @@ app.get('/', (req, res) => {
 
 const port = 8080;
 app.listen(port, () => {
-	console.log(`helloworld: listening on port ${port}`);
+	console.log(`listening on port ${port}`);
 });
 
