@@ -14,7 +14,6 @@ RUN mkdir /app
 WORKDIR /app
 
 ENV NODE_ENV production
-ENV FFMPEG_PATH "./app/src/ffmpeg/ffmpeg"
 
 COPY . .
 
@@ -28,7 +27,6 @@ COPY --from=builder /app /app
 
 WORKDIR /app
 ENV NODE_ENV production
-ENV FFMPEG_PATH "./app/src/ffmpeg/ffmpeg"
 ENV PATH /root/.volta/bin:$PATH
 
 CMD [ "npm", "run", "start" ]
