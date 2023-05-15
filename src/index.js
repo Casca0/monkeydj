@@ -1,6 +1,7 @@
 // Imports
 
 require('dotenv').config();
+const ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const extractors = require('@discord-player/extractor');
 const fs = require('node:fs');
@@ -13,6 +14,8 @@ const token = process.env.DISCORD_TOKEN;
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMembers] });
 
 // Música
+
+console.log(ffmpeg.path, ffmpeg.version);
 
 const player = Player.singleton(client, {
 	smoothVolume: false,
