@@ -1,6 +1,8 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 const { useMasterPlayer } = require('discord-player');
+
+const { buttonRow } = require('../utils/dashboardComponents');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -52,6 +54,8 @@ module.exports = {
 
 		if (!searchResult.hasTracks()) return interaction.followUp('Não encontrei a música.');
 
+		const findDashboard = await interaction.guild.channels.cache.find(c => c.name == 'monkeydj-dashboard');
+
 		const queue = player.nodes.create(interaction.guild, {
 			volume: false,
 			disableHistory: true,
@@ -63,6 +67,7 @@ module.exports = {
 			skipOnNoStream: true,
 
 			metadata: {
+				dashboard: findDashboard,
 				channel: interaction.channel,
 			},
 		});
@@ -92,6 +97,24 @@ module.exports = {
 				return interaction.followUp('Player iniciado.');
 			}
 			else {
+				if (queue.metadata.dashboard) {
+					if (queue.tracks.data.length === 1) {
+						const message = await queue.metadata.dashboard.messages.fetch();
+						const embed = message.find(msg => msg.content === '').embeds[0];
+
+						const musicEmbed = EmbedBuilder.from(embed);
+
+						musicEmbed.setFields({
+							name: 'Próxima música',
+							value: queue.tracks.data[0] ? `**[${queue.tracks.data[0].title}](${queue.tracks.data[0].url})** - ${queue.tracks.data[0].author}` : 'Não tem.',
+						});
+
+						message.find(msg => msg.content === '').edit({
+							embeds: [musicEmbed],
+							components: [buttonRow],
+						});
+					}
+				}
 				return;
 			}
 		}

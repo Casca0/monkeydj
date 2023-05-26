@@ -53,7 +53,7 @@ for (const file of eventsFiles) {
 	const event = require(filePath);
 
 	if (event.music) {
-		player.events.on(event.name, (...args) => event.execute(...args));
+		player.events.on(event.name, async (...args) => await event.execute(...args));
 	}
 
 	if (event.once) {

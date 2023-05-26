@@ -1,5 +1,7 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMasterPlayer } = require('discord-player');
+
+const { buttonRow } = require('../utils/dashboardComponents');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -46,6 +48,25 @@ module.exports = {
 			return interaction.followUp({ content: `Não encontrei a música (**${query}**).`, ephemeral: true });
 		}
 		queue.insertTrack(searchResult.tracks[0]);
+
+		if (queue.metadata.dashboard) {
+			const message = await queue.metadata.dashboard.messages.fetch();
+			const embed = message.find(msg => msg.content === '').embeds[0];
+
+			const musicEmbed = EmbedBuilder.from(embed);
+
+			queue.tracks.shuffle();
+
+			musicEmbed.setFields({
+				name: 'Próxima música',
+				value: queue.tracks.data[0] ? `**[${queue.tracks.data[0].title}](${queue.tracks.data[0].url})** - ${queue.tracks.data[0].author}` : 'Não tem.',
+			});
+
+			message.find(msg => msg.content === '').edit({
+				embeds: [musicEmbed],
+				components: [buttonRow],
+			});
+		}
 
 		return interaction.followUp({ content: `Carregando a música **${searchResult.tracks[0].title}**`, ephemeral: true });
 	},

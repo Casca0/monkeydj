@@ -1,11 +1,13 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { useMasterPlayer } = require('discord-player');
+
+const { buttonRow } = require('../utils/dashboardComponents');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('skip')
 		.setDescription('Pula para a próxima música.'),
-	execute(interaction) {
+	async execute(interaction) {
 		const player = useMasterPlayer();
 
 		const queue = player.nodes.get(interaction.guild.id);
@@ -15,6 +17,28 @@ module.exports = {
 
 		const currentTrack = queue.currentTrack;
 		const success = queue.node.skip();
+
+		if (queue.metadata.dashboard) {
+			if (queue.tracks.data.length <= 0) {
+				const message = await queue.metadata.dashboard.messages.fetch();
+				const embed = message.find(msg => msg.content === '').embeds[0];
+
+				const musicEmbed = EmbedBuilder.from(embed);
+
+				musicEmbed.setTitle('Nenhuma música está tocando');
+				musicEmbed.setDescription(null);
+				musicEmbed.setThumbnail(null);
+				musicEmbed.setFields({
+					name: '\u200b',
+					value: '\u200b',
+				});
+
+				message.find(msg => msg.content === '').edit({
+					embeds: [musicEmbed],
+					components: [buttonRow],
+				});
+			}
+		}
 
 		return interaction.followUp({ content: success ? `Pulando a música atual (**${currentTrack}**)` : 'Algo deu errado!' });
 	},
