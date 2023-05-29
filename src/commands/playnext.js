@@ -34,7 +34,7 @@ module.exports = {
 
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
-			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
 		const query = interaction.options.getString('query');
@@ -45,7 +45,7 @@ module.exports = {
 		});
 
 		if (!searchResult || !searchResult.tracks.length) {
-			return interaction.followUp({ content: `Não encontrei a música (**${query}**).`, ephemeral: true });
+			return interaction.reply({ content: `Não encontrei a música (**${query}**).`, ephemeral: true });
 		}
 		queue.insertTrack(searchResult.tracks[0]);
 
@@ -68,6 +68,6 @@ module.exports = {
 			});
 		}
 
-		return interaction.followUp({ content: `Carregando a música **${searchResult.tracks[0].title}**`, ephemeral: true });
+		return interaction.reply({ content: `Carregando a música **${searchResult.tracks[0].title}**`, ephemeral: true });
 	},
 };

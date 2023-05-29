@@ -13,7 +13,7 @@ module.exports = {
 		const queue = player.nodes.get(interaction.guild.id);
 
 		if (!queue || !queue.node.isPlaying()) {
-			return interaction.followUp({ content: 'Nenhuma música na fila!', ephemeral: true });
+			return interaction.reply({ content: 'Nenhuma música na fila!', ephemeral: true });
 		}
 
 		queue.tracks.clear();
@@ -35,6 +35,6 @@ module.exports = {
 			});
 		}
 
-		return interaction.followUp({ content: 'Fila de músicas excluída!' });
+		return interaction.reply({ content: 'Fila de músicas excluída!' });
 	},
 };

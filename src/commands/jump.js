@@ -14,7 +14,7 @@ module.exports = {
 
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
-			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
 		const indexOption = interaction.options.getInteger('músicas');
@@ -28,8 +28,8 @@ module.exports = {
 		}
 		catch (err) {
 			console.log(err);
-			return interaction.followUp(`Ocorreu o seguinte erro ao pular de música : ${err}`);
+			return interaction.reply(`Ocorreu o seguinte erro ao pular de música : ${err}`);
 		}
-		return interaction.followUp({ content: `Pulando para **${trackName}**.` });
+		return interaction.reply({ content: `Pulando para **${trackName}**.` });
 	},
 };

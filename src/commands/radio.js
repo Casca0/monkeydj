@@ -11,18 +11,18 @@ module.exports = {
 		const queue = player.nodes.get(interaction.guild.id);
 
 		if (!queue || !queue.node.isPlaying()) {
-			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
 		if (queue.repeatMode === 3) {
 			queue.setRepeatMode(0);
 
-			return interaction.followUp('Rádio desativado!');
+			return interaction.reply('Rádio desativado!');
 		}
 		else {
 			queue.setRepeatMode(3);
 
-			return interaction.followUp('Rádio ativado!');
+			return interaction.reply('Rádio ativado!');
 		}
 	},
 };

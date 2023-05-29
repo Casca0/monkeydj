@@ -6,7 +6,13 @@ const { playlistModel } = require('../models/playlistModel.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('tocarplaylist')
-		.setDescription('Toque alguma playlist sua.')
+		.setDescription('Toque alguma playlist.')
+		.addUserOption(option =>
+			option
+				.setName('user')
+				.setDescription('Selecione o user para pegar uma playlist.')
+				.setRequired(true),
+		)
 		.addStringOption(option =>
 			option
 				.setName('playlist')
@@ -15,7 +21,9 @@ module.exports = {
 				.setAutocomplete(true),
 		),
 	async autocomplete(interaction) {
-		const playlists = await playlistModel.find({ user_id: interaction.user.id });
+		const member = interaction.options.get('user').value;
+
+		const playlists = await playlistModel.find({ user_id: member });
 
 		const results = playlists.slice(0, playlists.length).map((p) => ({
 			name: p.playlist_name,
@@ -27,18 +35,20 @@ module.exports = {
 		);
 	},
 	async execute(interaction) {
+		await interaction.deferReply();
+
 		const playlistName = interaction.options.getString('playlist');
 
-		const playlist = await playlistModel.findOne({ user_id: interaction.user.id, playlist_name: playlistName });
-
-		if (!playlist) return interaction.followUp('Você não tem uma playlist com esse nome.');
-
 		if (!interaction.member.voice.channelId) {
-			return interaction.followUp({ content: 'Entre num canal de voz primeiro.' });
+			return interaction.reply({ content: 'Entre num canal de voz primeiro.' });
 		}
 		if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
-			return interaction.followUp({ content: 'Não estamos no mesmo canal de voz.' });
+			return interaction.reply({ content: 'Não estamos no mesmo canal de voz.' });
 		}
+
+		const playlist = await playlistModel.findOne({ playlist_name: playlistName });
+
+		if (!playlist) return interaction.reply('Você não tem uma playlist com esse nome.');
 
 		const player = useMasterPlayer();
 
@@ -74,5 +84,6 @@ module.exports = {
 		if (!queue.node.isPlaying()) await queue.node.play();
 
 		return interaction.followUp('Playlist carregada!');
+
 	},
 };

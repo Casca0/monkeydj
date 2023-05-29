@@ -18,6 +18,6 @@ module.exports = {
 
 		console.log(queue.repeatMode);
 
-		return interaction.followUp('Teste');
+		return interaction.reply('Teste');
 	},
 };

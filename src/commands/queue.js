@@ -11,7 +11,7 @@ module.exports = {
 		const queue = player.nodes.get(interaction.guild.id);
 
 		if (!queue) {
-			return interaction.followUp({ content: 'Nenhuma música na fila!', ephemeral: true });
+			return interaction.reply({ content: 'Nenhuma música na fila!', ephemeral: true });
 		}
 
 		const currentTrack = queue.currentTrack;
@@ -53,7 +53,7 @@ module.exports = {
 
 		const canFitInOnePage = tracks.length <= totalItensInPage;
 
-		const interactionReply = await interaction.followUp({
+		const interactionReply = await interaction.reply({
 			embeds: [await generatePlaylistEmbed(0)],
 			components: canFitInOnePage ? [] : [new ActionRowBuilder({
 				components: [forwardButton],

@@ -35,10 +35,10 @@ module.exports = {
 		const channel = interaction.member.voice.channel;
 
 		if (!interaction.member.voice.channelId) {
-			return interaction.followUp({ content: 'Entre num canal de voz primeiro.' });
+			return interaction.reply({ content: 'Entre num canal de voz primeiro.' });
 		}
 		if (interaction.guild.members.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId) {
-			return interaction.followUp({ content: 'Não estamos no mesmo canal de voz.' });
+			return interaction.reply({ content: 'Não estamos no mesmo canal de voz.' });
 		}
 
 		const player = useMasterPlayer();
@@ -52,7 +52,7 @@ module.exports = {
 			console.log(err);
 		});
 
-		if (!searchResult.hasTracks()) return interaction.followUp('Não encontrei a música.');
+		if (!searchResult.hasTracks()) return interaction.reply('Não encontrei a música.');
 
 		const findDashboard = await interaction.guild.channels.cache.find(c => c.name == 'monkeydj-dashboard');
 
@@ -78,8 +78,10 @@ module.exports = {
 		catch (e) {
 			console.error(e);
 			queue.delete();
-			return interaction.followUp(`Ocorreu um erro ao me conectar no canal: ${e}`);
+			return interaction.reply(`Ocorreu um erro ao me conectar no canal: ${e}`);
 		}
+
+		await interaction.deferReply();
 
 		await interaction.followUp({ content: `Carregando a ${searchResult.playlist ? `playlist **${searchResult.playlist.title}**` : `música **${searchResult.tracks[0].title}**`}` });
 

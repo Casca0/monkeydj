@@ -10,11 +10,11 @@ module.exports = {
 
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue.node.isPaused()) {
-			return interaction.followUp({ content: 'O bot não está pausado ou não está tocando música!', ephemeral: true });
+			return interaction.reply({ content: 'O bot não está pausado ou não está tocando música!', ephemeral: true });
 		}
 
 		const paused = queue.node.resume();
 
-		return interaction.followUp({ content: paused ? 'Música retomada.' : 'Algo deu errado!' });
+		return interaction.reply({ content: paused ? 'Música retomada.' : 'Algo deu errado!' });
 	},
 };

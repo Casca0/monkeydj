@@ -12,7 +12,7 @@ module.exports = {
 
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
-			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
 		if (queue.metadata.dashboard) {
@@ -37,6 +37,6 @@ module.exports = {
 
 		if (!queue.deleted) queue.delete();
 
-		return interaction.followUp({ content: 'Player Parado!' });
+		return interaction.reply({ content: 'Player Parado!' });
 	},
 };

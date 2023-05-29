@@ -12,7 +12,7 @@ module.exports = {
 
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
-			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
 		queue.tracks.shuffle();
@@ -36,6 +36,6 @@ module.exports = {
 			});
 		}
 
-		return interaction.followUp({ content: 'Fila embaralhada!' });
+		return interaction.reply({ content: 'Fila embaralhada!' });
 	},
 };

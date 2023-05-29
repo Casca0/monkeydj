@@ -1,7 +1,7 @@
 // Imports
 
 require('dotenv').config();
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, Partials } = require('discord.js');
 const extractors = require('@discord-player/extractor');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -11,7 +11,7 @@ const { connect } = require('mongoose');
 
 const { DISCORD_TOKEN, MONGO_TOKEN } = process.env;
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMembers] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMembers], partials: [Partials.User, Partials.GuildMember] });
 
 // Música
 

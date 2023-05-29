@@ -24,14 +24,12 @@ module.exports = {
 
 			if (!command) return;
 
-			await interaction.deferReply();
-
 			try {
 				await command.execute(interaction);
 			}
 			catch (e) {
 				console.error(e);
-				return await interaction.followUp(`Ocorreu um erro\n${e}`);
+				return await interaction.reply(`Ocorreu um erro\n${e}`);
 			}
 		}
 		else if (interaction.isUserContextMenuCommand()) {
@@ -39,21 +37,19 @@ module.exports = {
 
 			if (!command) return;
 
-			await interaction.deferReply();
-
 			try {
 				await command.execute(interaction);
 			}
 			catch (e) {
 				console.error(e);
-				return await interaction.followUp(`Ocorreu um erro\n${e}`);
+				return await interaction.reply(`Ocorreu um erro\n${e}`);
 			}
 		}
-		else if (interaction.isButton()) {
+		else if (interaction.isButton() && ['playpause', 'stop', 'clear', 'skip', 'shuffle'].includes(interaction.customId)) {
 			const player = useMasterPlayer();
 			const queue = player.nodes.get(interaction.guild.id);
 
-			if (!queue || !queue.node.isPlaying()) {
+			if (!queue || !queue.currentTrack) {
 				const reply = await interaction.reply('Nenhuma música esta tocando!');
 				setTimeout(() => {
 					reply.delete();
@@ -175,6 +171,9 @@ module.exports = {
 				setTimeout(() => {
 					reply.delete();
 				}, 3000);
+			}
+			else {
+				return;
 			}
 		}
 	},

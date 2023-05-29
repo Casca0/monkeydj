@@ -10,7 +10,7 @@ module.exports = {
 	async execute(interaction) {
 		const findDashboard = await interaction.guild.channels.cache.find(channel => channel.name == 'monkeydj-dashboard');
 
-		if (findDashboard) return interaction.followUp('Dashboard já existe.');
+		if (findDashboard) return interaction.reply('Dashboard já existe.');
 
 		const channel = await interaction.guild.channels.create({
 			name: 'monkeydj-dashboard',
@@ -18,6 +18,6 @@ module.exports = {
 
 		channel.send({ embeds: [dashboardEmbed], components: [buttonRow] });
 
-		return interaction.followUp('Dashboard criado.');
+		return interaction.reply('Dashboard criado.');
 	},
 };

@@ -14,7 +14,7 @@ module.exports = {
 
 		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue) {
-			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
 		const indexOption = interaction.options.getInteger('música');
@@ -24,6 +24,6 @@ module.exports = {
 		const trackName = queue.tracks.store[trackIndex].title;
 		queue.removeTrack(trackIndex);
 
-		return interaction.followUp({ content: `Música removida (**${trackName}**).` });
+		return interaction.reply({ content: `Música removida (**${trackName}**).` });
 	},
 };

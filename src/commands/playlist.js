@@ -119,7 +119,7 @@ module.exports = {
 				user_id: interaction.user.id,
 			});
 
-			return interaction.followUp('Playlist criada!');
+			return interaction.reply('Playlist criada!');
 		}
 
 		if (command === 'adicionar') {
@@ -130,15 +130,15 @@ module.exports = {
 				playlist_name: playlistName,
 			});
 
-			if (!playlist) return interaction.followUp('Não encontrei a playlist.');
+			if (!playlist) return interaction.reply('Não encontrei a playlist.');
 
 			const searchResult = await player.search(query, {
 				searchEngine: 'auto',
 			}).then(res => res.toJSON());
 
-			if (searchResult.playlist) return interaction.followUp('Não aceito links de playlist!');
+			if (searchResult.playlist) return interaction.reply('Não aceito links de playlist!');
 
-			if (searchResult.tracks.length == 0) return interaction.followUp({ content: 'Não encontrei a música.', ephemeral: true });
+			if (searchResult.tracks.length == 0) return interaction.reply({ content: 'Não encontrei a música.', ephemeral: true });
 
 			const trackEmbed = new EmbedBuilder({
 				title: 'É essa música?',
@@ -162,7 +162,7 @@ module.exports = {
 				customId: 'back',
 			});
 
-			const interactionReply = await interaction.followUp({ embeds: [trackEmbed], components: [new ActionRowBuilder({
+			const interactionReply = await interaction.reply({ embeds: [trackEmbed], components: [new ActionRowBuilder({
 				components: [okayButton, backButton],
 			})] });
 
@@ -201,11 +201,11 @@ module.exports = {
 
 			const playlist = await playlistModel.findOne({ playlist_name: playlistName });
 
-			if (!playlist) return interaction.followUp('Não encontrei a playlist!');
+			if (!playlist) return interaction.reply('Não encontrei a playlist!');
 
 			const track = playlist.playlist_tracks[musicIndex];
 
-			if (!track) return interaction.followUp('Não existe essa música na sua playlist.');
+			if (!track) return interaction.reply('Não existe essa música na sua playlist.');
 
 			const trackEmbed = new EmbedBuilder({
 				title: 'Tem certeza que quer remover essa música?',
@@ -227,7 +227,7 @@ module.exports = {
 				customId: 'back',
 			});
 
-			const interactionReply = await interaction.followUp({ embeds: [trackEmbed], components: [new ActionRowBuilder({
+			const interactionReply = await interaction.reply({ embeds: [trackEmbed], components: [new ActionRowBuilder({
 				components: [okayButton, backButton],
 			})] });
 

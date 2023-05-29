@@ -11,10 +11,10 @@ module.exports = {
 		const queue = player.nodes.get(interaction.guild.id);
 
 		if (!queue || !queue.node.isPlaying()) {
-			return interaction.followUp({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}
 
-		return interaction.followUp({ embeds: [
+		return interaction.reply({ embeds: [
 			{
 				title: 'Tocando agora',
 				description: `**[${queue.currentTrack.title}](${queue.currentTrack.url})** - ${queue.currentTrack.author}`,
