@@ -53,7 +53,7 @@ module.exports = {
 			const player = useMasterPlayer();
 			const queue = player.nodes.get(interaction.guild.id);
 
-			if (!queue.tracks) {
+			if (!queue || !queue.node.isPlaying()) {
 				const reply = await interaction.reply('Nenhuma música esta tocando!');
 				setTimeout(() => {
 					reply.delete();

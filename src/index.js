@@ -7,8 +7,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
 const { Player } = require('discord-player');
+const { connect } = require('mongoose');
 
-const token = process.env.DISCORD_TOKEN;
+const { DISCORD_TOKEN, MONGO_TOKEN } = process.env;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMembers] });
 
@@ -38,6 +39,9 @@ const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith
 
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
+
+	delete require.cache[require.resolve(filePath)];
+
 	const command = require(filePath);
 
 	client.commands.set(command.data.name, command);
@@ -64,7 +68,18 @@ for (const file of eventsFiles) {
 	}
 }
 
-client.login(token);
+client.login(DISCORD_TOKEN);
+
+// Database
+
+connect(MONGO_TOKEN, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+}).then(() => {
+	console.log('Conectei ao banco de dados!');
+}).catch((err) => {
+	console.log(err);
+});
 
 // Server
 
