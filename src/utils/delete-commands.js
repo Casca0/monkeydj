@@ -1,11 +1,11 @@
 require('dotenv/config');
 const { REST, Routes } = require('discord.js');
 
-const { DISCORD_TOKEN, CLIENT_ID } = process.env;
+// eslint-disable-next-line no-unused-vars
+const { DISCORD_TOKEN, CLIENT_ID, DISCORD_PROD_TOKEN, PROD_CLIENT_ID } = process.env;
 
+const rest = new REST().setToken(DISCORD_PROD_TOKEN);
 
-const rest = new REST({ version: 10 }).setToken(DISCORD_TOKEN);
-
-rest.put(Routes.applicationCommands(CLIENT_ID), { body: [] })
+rest.put(Routes.applicationCommands(PROD_CLIENT_ID), { body: [] })
 	.then(() => console.log('Comandos deletados.'))
 	.catch(console.error);

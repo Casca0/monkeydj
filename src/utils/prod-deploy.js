@@ -3,7 +3,8 @@ const { REST, Routes } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const { DISCORD_TOKEN, CLIENT_ID } = process.env;
+// eslint-disable-next-line no-unused-vars
+const { DISCORD_TOKEN, CLIENT_ID, DISCORD_PROD_TOKEN, PROD_CLIENT_ID } = process.env;
 
 const commands = [];
 
@@ -16,7 +17,7 @@ for (const file of commandFiles) {
 	commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: 10 }).setToken(DISCORD_TOKEN);
+const rest = new REST().setToken(DISCORD_TOKEN);
 
 rest.put(
 	Routes.applicationCommands(CLIENT_ID),
