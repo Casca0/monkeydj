@@ -53,18 +53,12 @@ module.exports = {
 				const reply = await interaction.reply('Nenhuma música esta tocando!');
 				setTimeout(() => {
 					reply.delete();
-				}, 3000);
+				}, 2000);
 				return;
 			}
 
 			if (interaction.customId == 'playpause') {
 				queue.node.setPaused(!queue.node.isPaused());
-
-				const reply = await interaction.reply(queue.node.isPaused() ? 'Música pausada!' : 'Música retomada!');
-
-				setTimeout(() => {
-					reply.delete();
-				}, 3000);
 			}
 			else if (interaction.customId === 'stop') {
 				const message = await queue.metadata.dashboard.messages.fetch();
@@ -86,12 +80,6 @@ module.exports = {
 				});
 
 				queue.delete();
-
-				const reply = await interaction.reply({ content: 'Player Parado!' });
-
-				setTimeout(() => {
-					reply.delete();
-				}, 3000);
 			}
 			else if (interaction.customId === 'clear') {
 				queue.clear();
@@ -110,16 +98,8 @@ module.exports = {
 					embeds: [musicEmbed],
 					components: [buttonRow],
 				});
-
-				const reply = await interaction.reply({ content: 'Fila de músicas excluída!' });
-
-				setTimeout(() => {
-					reply.delete();
-				}, 3000);
 			}
 			else if (interaction.customId === 'skip') {
-				const currentTrack = queue.currentTrack;
-
 				queue.node.skip();
 
 				if (queue.tracks.data.length <= 0) {
@@ -141,12 +121,6 @@ module.exports = {
 						components: [buttonRow],
 					});
 				}
-
-				const reply = await interaction.reply({ content: `Pulando a música atual (**${currentTrack}**)` });
-
-				setTimeout(() => {
-					reply.delete();
-				}, 3000);
 			}
 			else if (interaction.customId === 'shuffle') {
 				const message = await queue.metadata.dashboard.messages.fetch();
@@ -165,12 +139,6 @@ module.exports = {
 					embeds: [musicEmbed],
 					components: [buttonRow],
 				});
-
-				const reply = await interaction.reply({ content: 'Fila embaralhada!' });
-
-				setTimeout(() => {
-					reply.delete();
-				}, 3000);
 			}
 			else {
 				return;
