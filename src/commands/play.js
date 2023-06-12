@@ -18,7 +18,6 @@ module.exports = {
 		const player = useMasterPlayer();
 		const query = interaction.options.getString('query');
 		const results = await player.search(query, {
-			fallbackSearchEngine: 'spotifySearch',
 			searchEngine: 'youtubeSearch',
 		});
 
@@ -46,7 +45,6 @@ module.exports = {
 		const query = interaction.options.getString('query');
 
 		const searchResult = await player.search(query, {
-			fallbackSearchEngine: 'spotifySearch',
 			requestedBy: interaction.user,
 		}).catch((err) => {
 			console.log(err);
