@@ -87,7 +87,6 @@ module.exports = {
 
 		if (searchResult.playlist) {
 			queue.addTrack(searchResult.tracks);
-			queue.tracks.shuffle();
 		}
 		else {
 			queue.addTrack(searchResult.tracks[0]);
