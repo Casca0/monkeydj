@@ -57,7 +57,7 @@ module.exports = {
 				return;
 			}
 
-			if (interaction.customId == 'playpause') {
+			if (interaction.customId === 'playpause') {
 				queue.node.setPaused(!queue.node.isPaused());
 			}
 			else if (interaction.customId === 'stop') {

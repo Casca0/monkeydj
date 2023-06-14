@@ -14,9 +14,15 @@ module.exports = {
 	async execute(interaction) {
 		const player = useMasterPlayer();
 
-		const queue = player.nodes.get(interaction.guild.id);
+		const query = interaction.options.getString('query');
 
-		console.log(queue.repeatMode);
+		const searchResult = await player.search(query, {
+			requestedBy: interaction.user,
+		}).catch((err) => {
+			console.log(err);
+		});
+
+		console.log(searchResult);
 
 		return interaction.reply('Teste');
 	},
