@@ -20,10 +20,20 @@ module.exports = {
 			searchEngine: 'youtubeSearch',
 		});
 
-		const tracks = results.tracks.slice(0, 10).map((t) => ({
-			name: t.title,
-			value: t.url,
-		}));
+		const tracks = results.tracks.slice(0, 10).map((t) => {
+			let title = t.title;
+
+			if (title.length >= 255) {
+				title = title.substring(0, 251).trimEnd() + '...';
+			}
+
+			const obj = {
+				name: title,
+				value: t.url,
+			};
+
+			return obj;
+		});
 
 		await interaction.respond(
 			tracks,

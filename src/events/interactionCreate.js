@@ -59,6 +59,10 @@ module.exports = {
 
 			if (interaction.customId === 'playpause') {
 				queue.node.setPaused(!queue.node.isPaused());
+
+				interaction.deferUpdate();
+
+				return;
 			}
 			else if (interaction.customId === 'stop') {
 				const message = await queue.metadata.dashboard.messages.fetch();
@@ -80,6 +84,10 @@ module.exports = {
 				});
 
 				queue.delete();
+
+				interaction.deferUpdate();
+
+				return;
 			}
 			else if (interaction.customId === 'clear') {
 				queue.clear();
@@ -98,6 +106,10 @@ module.exports = {
 					embeds: [musicEmbed],
 					components: [buttonRow],
 				});
+
+				interaction.deferUpdate();
+
+				return;
 			}
 			else if (interaction.customId === 'skip') {
 				queue.node.skip();
@@ -121,6 +133,10 @@ module.exports = {
 						components: [buttonRow],
 					});
 				}
+
+				interaction.deferUpdate();
+
+				return;
 			}
 			else if (interaction.customId === 'shuffle') {
 				const message = await queue.metadata.dashboard.messages.fetch();
@@ -139,6 +155,10 @@ module.exports = {
 					embeds: [musicEmbed],
 					components: [buttonRow],
 				});
+
+				interaction.deferUpdate();
+
+				return;
 			}
 			else {
 				return;
