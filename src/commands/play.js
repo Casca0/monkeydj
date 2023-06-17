@@ -24,8 +24,8 @@ module.exports = {
 		const tracks = results.tracks.slice(0, 10).map((t) => {
 			let title = t.title;
 
-			if (title.length >= 255) {
-				title = title.substring(0, 251).trimEnd() + '...';
+			if (title.length >= 100) {
+				title = title.substring(0, 96).trimEnd() + '...';
 			}
 
 			const obj = {

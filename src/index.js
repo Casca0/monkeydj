@@ -11,7 +11,7 @@ const { connect } = require('mongoose');
 
 const { DISCORD_TOKEN, MONGO_TOKEN } = process.env;
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMembers], partials: [Partials.User, Partials.GuildMember] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages], partials: [Partials.User, Partials.GuildMember] });
 
 // Música
 
