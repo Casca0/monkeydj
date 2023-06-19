@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { Track, useMasterPlayer } = require('discord-player');
+const { Track, useMasterPlayer } = require('discord-player/dist');
 
 const { playlistModel } = require('../models/playlistModel.js');
 

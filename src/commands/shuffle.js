@@ -1,16 +1,13 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
-
 const { buttonRow } = require('../utils/dashboardComponents');
+const { useQueue } = require('discord-player/dist');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('shuffle')
 		.setDescription('Embaralha a fila de música.'),
 	async execute(interaction) {
-		const player = useMasterPlayer();
-
-		const queue = player.nodes.get(interaction.guild.id);
+		const queue = useQueue(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
 			return interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}

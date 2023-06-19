@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
+const { useMasterPlayer } = require('discord-player/dist');
 
 module.exports = {
 	data: new SlashCommandBuilder()

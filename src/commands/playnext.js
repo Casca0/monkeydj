@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
+const { useMasterPlayer, useQueue } = require('discord-player/dist');
 
 const { buttonRow } = require('../utils/dashboardComponents');
 
@@ -42,9 +42,9 @@ module.exports = {
 	async execute(interaction) {
 		const player = useMasterPlayer();
 
-		const queue = player.nodes.get(interaction.guild.id);
+		const queue = useQueue(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
-			return interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
+			return interaction.reply({ content: 'Nenhuma música está tocando!' });
 		}
 
 		const query = interaction.options.getString('query');
@@ -55,7 +55,7 @@ module.exports = {
 		});
 
 		if (!searchResult || !searchResult.tracks.length) {
-			return interaction.reply({ content: `Não encontrei a música (**${query}**).`, ephemeral: true });
+			return interaction.reply({ content: 'Não encontrei a música.' });
 		}
 		queue.insertTrack(searchResult.tracks[0]);
 
@@ -78,6 +78,6 @@ module.exports = {
 			});
 		}
 
-		return interaction.reply({ content: `Carregando a música **${searchResult.tracks[0].title}**`, ephemeral: true });
+		return interaction.reply({ content: `Carregando a música **${searchResult.tracks[0].title}**` });
 	},
 };

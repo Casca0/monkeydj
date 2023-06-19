@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
+const { useQueue } = require('discord-player/dist');
 
 const { buttonRow } = require('../utils/dashboardComponents');
 
@@ -8,9 +8,7 @@ module.exports = {
 		.setName('clear')
 		.setDescription('Limpa a fila de música.'),
 	async execute(interaction) {
-		const player = useMasterPlayer();
-
-		const queue = player.nodes.get(interaction.guild.id);
+		const queue = useQueue(interaction.guild.id);
 
 		if (!queue || !queue.node.isPlaying()) {
 			return interaction.reply({ content: 'Nenhuma música na fila!', ephemeral: true });

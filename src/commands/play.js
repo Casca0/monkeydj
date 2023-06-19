@@ -1,8 +1,10 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
-const { useMasterPlayer } = require('discord-player');
+const { useMasterPlayer } = require('discord-player/dist');
 
 const { buttonRow } = require('../utils/dashboardComponents');
+
+const player = useMasterPlayer();
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,7 +17,6 @@ module.exports = {
 				.setAutocomplete(true),
 		),
 	async autocomplete(interaction) {
-		const player = useMasterPlayer();
 		const query = interaction.options.getString('query');
 		const results = await player.search(query, {
 			searchEngine: 'youtubeSearch',
@@ -50,8 +51,6 @@ module.exports = {
 			return interaction.reply({ content: 'Não estamos no mesmo canal de voz.' });
 		}
 
-		const player = useMasterPlayer();
-
 		const query = interaction.options.getString('query');
 
 		const searchResult = await player.search(query, {
@@ -68,9 +67,9 @@ module.exports = {
 			volume: false,
 			disableHistory: true,
 			leaveOnEmpty: true,
-			leaveOnEmptyCooldown: 300000,
+			leaveOnEmptyCooldown: 30000,
 			leaveOnEnd: true,
-			leaveOnEndCooldown: 300000,
+			leaveOnEndCooldown: 30000,
 			selfDeaf: true,
 			skipOnNoStream: true,
 
@@ -80,18 +79,9 @@ module.exports = {
 			},
 		});
 
-		try {
-			if (!queue.connection) await queue.connect(channel);
-		}
-		catch (e) {
-			console.error(e);
-			queue.delete();
-			return interaction.reply(`Ocorreu um erro ao me conectar no canal: ${e}`);
-		}
-
 		await interaction.deferReply();
 
-		await interaction.followUp({ content: `Carregando a ${searchResult.playlist ? `playlist **${searchResult.playlist.title}**` : `música **${searchResult.tracks[0].title}**`}` });
+		interaction.followUp({ content: `Carregando a ${searchResult.playlist ? `playlist **${searchResult.playlist.title}**` : `música **${searchResult.tracks[0].title}**`}` });
 
 		if (searchResult.playlist) {
 			queue.addTrack(searchResult.tracks);
@@ -101,9 +91,10 @@ module.exports = {
 		}
 
 		try {
+			if (!queue.connection) await queue.connect(channel);
 			if (!queue.node.isPlaying()) {
 				await queue.node.play();
-				return interaction.followUp('Player iniciado.');
+				return interaction.editReply('Player iniciado.');
 			}
 			else {
 				if (queue.metadata.dashboard) {
@@ -129,6 +120,7 @@ module.exports = {
 		}
 		catch (e) {
 			console.error(e);
+			queue.delete();
 			return interaction.followUp(`Ocorreu o seguinte erro : ${e}`);
 		}
 

@@ -1,14 +1,12 @@
 const { SlashCommandBuilder, ButtonBuilder, EmbedBuilder, ComponentType, ActionRowBuilder, ButtonStyle } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
+const { useQueue } = require('discord-player/dist');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('queue')
 		.setDescription('Mostra a fila de música atual.'),
 	async execute(interaction) {
-		const player = useMasterPlayer();
-
-		const queue = player.nodes.get(interaction.guild.id);
+		const queue = useQueue(interaction.guild.id);
 
 		if (!queue) {
 			return interaction.reply({ content: 'Nenhuma música na fila!', ephemeral: true });

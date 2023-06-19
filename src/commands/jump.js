@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
+const { useQueue } = require('discord-player/dist');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,9 +10,8 @@ module.exports = {
 				.setDescription('Número de músicas para pular da fila.')
 				.setRequired(true)),
 	execute(interaction) {
-		const player = useMasterPlayer();
+		const queue = useQueue(interaction.guild.id);
 
-		const queue = player.nodes.get(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
 			return interaction.reply({ content: 'Nenhuma música está tocando!', ephemeral: true });
 		}

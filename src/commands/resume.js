@@ -1,14 +1,12 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
+const { useQueue } = require('discord-player/dist');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('resume')
 		.setDescription('Retoma a música atual.'),
 	execute(interaction) {
-		const player = useMasterPlayer();
-
-		const queue = player.nodes.get(interaction.guild.id);
+		const queue = useQueue(interaction.guild.id);
 		if (!queue.node.isPaused()) {
 			return interaction.reply({ content: 'O bot não está pausado ou não está tocando música!', ephemeral: true });
 		}

@@ -1,5 +1,5 @@
-const { useMasterPlayer } = require('discord-player');
 const { EmbedBuilder } = require('discord.js');
+const { useQueue } = require('discord-player/dist');
 
 const { buttonRow } = require('../utils/dashboardComponents');
 
@@ -46,8 +46,7 @@ module.exports = {
 			}
 		}
 		else if (interaction.isButton() && ['playpause', 'stop', 'clear', 'skip', 'shuffle'].includes(interaction.customId)) {
-			const player = useMasterPlayer();
-			const queue = player.nodes.get(interaction.guild.id);
+			const queue = useQueue(interaction.guild.id);
 
 			if (!queue || !queue.currentTrack) {
 				const reply = await interaction.reply('Nenhuma música esta tocando!');

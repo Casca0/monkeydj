@@ -2,11 +2,10 @@
 
 require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, Partials } = require('discord.js');
-const extractors = require('@discord-player/extractor');
 const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
-const { Player } = require('discord-player');
+const { Player } = require('discord-player/dist');
 const { connect } = require('mongoose');
 
 const { DISCORD_TOKEN, MONGO_TOKEN } = process.env;
@@ -26,9 +25,7 @@ const player = Player.singleton(client, {
 	},
 });
 
-player.extractors.register(extractors.SoundCloudExtractor);
-player.extractors.register(extractors.SpotifyExtractor);
-player.extractors.register(extractors.YouTubeExtractor);
+player.extractors.loadDefault();
 
 // Manipulador de comandos
 

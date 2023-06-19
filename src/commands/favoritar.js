@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, StringSelectMenuBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
-const { useMasterPlayer } = require('discord-player');
+const { useQueue } = require('discord-player/dist');
 
 const { playlistModel } = require('../models/playlistModel.js');
 
@@ -8,8 +8,7 @@ module.exports = {
 		.setName('favoritar')
 		.setDescription('Favorite a música atual do player.'),
 	async execute(interaction) {
-		const player = useMasterPlayer();
-		const queue = player.nodes.get(interaction.guild.id);
+		const queue = useQueue(interaction.guild.id);
 
 		const track = queue.currentTrack;
 
@@ -51,7 +50,7 @@ module.exports = {
 		});
 
 		buttonCollector.on('collect', async intr => {
-			if (intr.customId == 'accept') {
+			if (intr.customId === 'accept') {
 				const playlists = await playlistModel.find({ user_id: interaction.user.id });
 
 				const options = playlists.slice(0, playlists.length).map((p) => ({
@@ -82,7 +81,7 @@ module.exports = {
 					return intr.editReply({ content: `Música adicionada à playlist **${playlist.playlist_name}**.`, components: [] });
 				});
 			}
-			if (intr.customId == 'reject') {
+			if (intr.customId === 'reject') {
 				return intr.update({ content: 'Okay!', components: [] });
 			}
 		});

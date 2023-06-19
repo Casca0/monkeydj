@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ComponentType, ActionRowBuilder, ButtonStyle } = require('discord.js');
 
-const { useMasterPlayer } = require('discord-player');
+const { useMasterPlayer } = require('discord-player/dist');
 
 const { playlistModel } = require('../models/playlistModel.js');
 
