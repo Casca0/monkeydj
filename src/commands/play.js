@@ -1,10 +1,10 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
-const { useMasterPlayer } = require('discord-player/dist');
+const { useMainPlayer } = require('discord-player/dist');
 
 const { buttonRow } = require('../utils/dashboardComponents');
 
-const player = useMasterPlayer();
+const player = useMainPlayer();
 
 module.exports = {
 	data: new SlashCommandBuilder()

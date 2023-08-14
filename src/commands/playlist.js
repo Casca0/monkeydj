@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ComponentType, ActionRowBuilder, ButtonStyle } = require('discord.js');
 
-const { useMasterPlayer } = require('discord-player/dist');
+const { useMainPlayer } = require('discord-player/dist');
 
 const { playlistModel } = require('../models/playlistModel.js');
 
@@ -75,7 +75,7 @@ module.exports = {
 		}
 
 		if (focusedOption.name === 'query') {
-			const player = useMasterPlayer();
+			const player = useMainPlayer();
 			const query = interaction.options.getString('query');
 			const results = await player.search(query, {
 				fallbackSearchEngine: 'spotifySearch',
@@ -107,7 +107,7 @@ module.exports = {
 		}
 	},
 	async execute(interaction) {
-		const player = useMasterPlayer();
+		const player = useMainPlayer();
 
 		const command = interaction.options.getSubcommand();
 

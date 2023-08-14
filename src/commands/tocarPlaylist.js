@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { Track, useMasterPlayer } = require('discord-player/dist');
+const { Track, useMainPlayer } = require('discord-player/dist');
 
 const { playlistModel } = require('../models/playlistModel.js');
 
@@ -50,7 +50,7 @@ module.exports = {
 
 		if (!playlist) return interaction.reply('Você não tem uma playlist com esse nome.');
 
-		const player = useMasterPlayer();
+		const player = useMainPlayer();
 
 		let queue = player.nodes.get(interaction.guild.id);
 

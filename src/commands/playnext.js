@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { useMasterPlayer, useQueue } = require('discord-player/dist');
+const { useMainPlayer, useQueue } = require('discord-player/dist');
 
 const { buttonRow } = require('../utils/dashboardComponents');
 
@@ -14,7 +14,7 @@ module.exports = {
 				.setAutocomplete(true),
 		),
 	async autocomplete(interaction) {
-		const player = useMasterPlayer();
+		const player = useMainPlayer();
 		const query = interaction.options.getString('query');
 		const results = await player.search(query, {
 			searchEngine: 'youtubeSearch',
@@ -40,7 +40,7 @@ module.exports = {
 		);
 	},
 	async execute(interaction) {
-		const player = useMasterPlayer();
+		const player = useMainPlayer();
 
 		const queue = useQueue(interaction.guild.id);
 		if (!queue || !queue.node.isPlaying()) {
