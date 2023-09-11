@@ -1,6 +1,6 @@
 FROM debian:bullseye as builder
 
-ARG NODE_VERSION=18.15.0
+ARG NODE_VERSION=18.16.0-bullseye
 
 RUN apt-get update; apt install -y curl
 RUN curl https://get.volta.sh | bash
@@ -12,6 +12,10 @@ RUN volta install node@${NODE_VERSION}
 
 RUN mkdir /app
 WORKDIR /app
+
+COPY package*.json ./
+
+RUN apt update && apt install -y ffmpeg
 
 ENV NODE_ENV production
 
