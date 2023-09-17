@@ -1,6 +1,6 @@
 FROM debian:bullseye as builder
 
-ARG NODE_VERSION=18.15.0
+ARG NODE_VERSION=18.16
 
 RUN apt-get update; apt install -y curl
 RUN curl https://get.volta.sh | bash
@@ -15,7 +15,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN apt update && apt install -y ffmpeg
+FROM node:${NODE_VERSION}-alpine
+RUN apk add --no-cache ffmpeg
 
 ENV NODE_ENV production
 

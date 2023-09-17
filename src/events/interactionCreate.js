@@ -1,10 +1,15 @@
-const { EmbedBuilder } = require('discord.js');
+// eslint-disable-next-line no-unused-vars
+const { EmbedBuilder, Client, CommandInteraction } = require('discord.js');
 const { useQueue } = require('discord-player/dist');
 
 const { buttonRow } = require('../utils/dashboardComponents');
 
 module.exports = {
 	name: 'interactionCreate',
+	/**
+	 * @param {Client} client
+	 * @param {CommandInteraction} interaction
+	*/
 	async execute(interaction, client) {
 		if (interaction.isAutocomplete()) {
 			const command = client.commands.get(interaction.commandName);
@@ -29,7 +34,10 @@ module.exports = {
 			}
 			catch (e) {
 				console.error(e);
-				return await interaction.reply(`Ocorreu um erro\n${e}`);
+				if (interaction.replied) {
+					return interaction.followUp(`Ocorreu um erro\n${e}`);
+				}
+				return interaction.reply(`Ocorreu um erro\n${e}`);
 			}
 		}
 		else if (interaction.isUserContextMenuCommand()) {
