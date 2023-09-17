@@ -1,7 +1,9 @@
-FROM debian:bullseye as builder
-
 ARG NODE_VERSION=18.16
 FROM node:${NODE_VERSION}-alpine
+
+RUN apk add --no-cache ffmpeg
+
+FROM debian:bullseye as builder
 
 RUN apt-get update; apt install -y curl
 RUN curl https://get.volta.sh | bash
@@ -15,8 +17,6 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY package*.json ./
-
-RUN apk add --no-cache ffmpeg
 
 ENV NODE_ENV production
 
