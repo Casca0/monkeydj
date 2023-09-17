@@ -17,6 +17,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 const player = Player.singleton(client, {
 	connectionTimeout: 60000 * 10,
 	smoothVolume: true,
+	useLegacyFFmpeg: true,
 	ytdlOptions: {
 		highWaterMark: 1 << 25,
 		quality: 'highestaudio',
