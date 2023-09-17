@@ -10,12 +10,12 @@ RUN volta install node@${NODE_VERSION}
 
 #######################################################################
 
-RUN mkdir /app
-WORKDIR /app
-
 RUN apt install ffmpeg -y --no-install-recommends \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir /app
+WORKDIR /app
 
 COPY package*.json ./
 
