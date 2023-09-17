@@ -5,18 +5,29 @@ const { Client, GatewayIntentBits, Collection, Partials } = require('discord.js'
 const fs = require('node:fs');
 const path = require('node:path');
 const express = require('express');
-const { Player } = require('discord-player/dist');
 const { connect } = require('mongoose');
-const { YouTubeExtractor, SpotifyExtractor } = require('@discord-player/extractor/dist');
+const { DisTube } = require('distube');
+const { SpotifyPlugin } = require('@distube/spotify');
 
-const { DISCORD_TOKEN, MONGO_TOKEN } = process.env;
+const { DISCORD_TOKEN, MONGO_TOKEN, SPOTIFY_ID, SPOTIFY_SECRET } = process.env;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMembers, GatewayIntentBits.DirectMessages], partials: [Partials.User, Partials.GuildMember] });
 
 // Música
 
-const player = Player.singleton(client, {
-	smoothVolume: false,
+const player = new DisTube(client, {
+	leaveOnEmpty: true,
+	emptyCooldown: 120,
+	leaveOnFinish: false,
+	searchSongs: 10,
+	plugins: [ new SpotifyPlugin({
+		emitEventsAfterFetching: true,
+		parallel: true,
+		api: {
+			clientId: SPOTIFY_ID,
+			clientSecret: SPOTIFY_SECRET,
+		},
+	}) ],
 	ytdlOptions: {
 		lang: 'pt-br',
 		filter: 'audioonly',
@@ -26,9 +37,7 @@ const player = Player.singleton(client, {
 	},
 });
 
-player.extractors.register(SpotifyExtractor, {});
-
-player.extractors.register(YouTubeExtractor, {});
+client.player = player;
 
 // Manipulador de comandos
 
@@ -49,6 +58,12 @@ for (const file of commandFiles) {
 
 // Manipulador de eventos
 
+player.on('error', (channel, error) => {
+	if (channel) channel.send(`ERRO: ${error}`);
+	console.log(`Erro geral do player ${error}`);
+	console.error(error);
+});
+
 const eventsPath = path.join(__dirname, 'events');
 const eventsFiles = fs.readdirSync(eventsPath).filter((file) => file.endsWith('.js'));
 
@@ -56,9 +71,9 @@ for (const file of eventsFiles) {
 	const filePath = path.join(eventsPath, file);
 	const event = require(filePath);
 
-	if (event.music) {
-		player.events.on(event.name, async (...args) => await event.execute(...args));
-	}
+	// if (event.music) {
+	// 	player.on(event.name, async (...args) => await event.execute(...args));
+	// }
 
 	if (event.once) {
 		client.once(event.name, (...args) => event.execute(...args));

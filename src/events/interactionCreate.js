@@ -1,7 +1,7 @@
-const { EmbedBuilder } = require('discord.js');
-const { useQueue } = require('discord-player/dist');
+// const { EmbedBuilder } = require('discord.js');
+// const { useQueue } = require('discord-player/dist');
 
-const { buttonRow } = require('../utils/dashboardComponents');
+// const { buttonRow } = require('../utils/dashboardComponents');
 
 module.exports = {
 	name: 'interactionCreate',
@@ -12,7 +12,7 @@ module.exports = {
 			if (!command) return;
 
 			try {
-				await command.autocomplete(interaction);
+				await command.autocomplete(interaction, client);
 			}
 			catch (e) {
 				console.error(e);
@@ -24,12 +24,14 @@ module.exports = {
 
 			if (!command) return;
 
+			await interaction.deferReply();
+
 			try {
-				await command.execute(interaction);
+				await command.execute(interaction, client);
 			}
 			catch (e) {
 				console.error(e);
-				return await interaction.reply(`Ocorreu um erro\n${e}`);
+				return await interaction.followUp(`Ocorreu um erro\n${e}`);
 			}
 		}
 		else if (interaction.isUserContextMenuCommand()) {
@@ -45,123 +47,123 @@ module.exports = {
 				return await interaction.reply(`Ocorreu um erro\n${e}`);
 			}
 		}
-		else if (interaction.isButton() && ['playpause', 'stop', 'clear', 'skip', 'shuffle'].includes(interaction.customId)) {
-			const queue = useQueue(interaction.guild.id);
+		// else if (interaction.isButton() && ['playpause', 'stop', 'clear', 'skip', 'shuffle'].includes(interaction.customId)) {
+		// 	const queue = useQueue(interaction.guild.id);
 
-			if (!queue || !queue.currentTrack) {
-				const reply = await interaction.reply('Nenhuma música esta tocando!');
-				setTimeout(() => {
-					reply.delete();
-				}, 2000);
-				return;
-			}
+		// 	if (!queue || !queue.currentTrack) {
+		// 		const reply = await interaction.reply('Nenhuma música esta tocando!');
+		// 		setTimeout(() => {
+		// 			reply.delete();
+		// 		}, 2000);
+		// 		return;
+		// 	}
 
-			if (interaction.customId === 'playpause') {
-				queue.node.setPaused(!queue.node.isPaused());
+		// 	if (interaction.customId === 'playpause') {
+		// 		queue.node.setPaused(!queue.node.isPaused());
 
-				interaction.deferUpdate();
+		// 		interaction.deferUpdate();
 
-				return;
-			}
-			else if (interaction.customId === 'stop') {
-				const message = await queue.metadata.dashboard.messages.fetch();
-				const embed = message.find(msg => msg.content === '').embeds[0];
+		// 		return;
+		// 	}
+		// 	else if (interaction.customId === 'stop') {
+		// 		const message = await queue.metadata.dashboard.messages.fetch();
+		// 		const embed = message.find(msg => msg.content === '').embeds[0];
 
-				const musicEmbed = EmbedBuilder.from(embed);
+		// 		const musicEmbed = EmbedBuilder.from(embed);
 
-				musicEmbed.setTitle('Nenhuma música está tocando');
-				musicEmbed.setDescription(null);
-				musicEmbed.setThumbnail(null);
-				musicEmbed.setFields({
-					name: '\u200b',
-					value: '\u200b',
-				});
+		// 		musicEmbed.setTitle('Nenhuma música está tocando');
+		// 		musicEmbed.setDescription(null);
+		// 		musicEmbed.setThumbnail(null);
+		// 		musicEmbed.setFields({
+		// 			name: '\u200b',
+		// 			value: '\u200b',
+		// 		});
 
-				message.find(msg => msg.content === '').edit({
-					embeds: [musicEmbed],
-					components: [buttonRow],
-				});
+		// 		message.find(msg => msg.content === '').edit({
+		// 			embeds: [musicEmbed],
+		// 			components: [buttonRow],
+		// 		});
 
-				queue.delete();
+		// 		queue.delete();
 
-				interaction.deferUpdate();
+		// 		interaction.deferUpdate();
 
-				return;
-			}
-			else if (interaction.customId === 'clear') {
-				queue.clear();
+		// 		return;
+		// 	}
+		// 	else if (interaction.customId === 'clear') {
+		// 		queue.clear();
 
-				const message = await queue.metadata.dashboard.messages.fetch();
-				const embed = message.find(msg => msg.content === '').embeds[0];
+		// 		const message = await queue.metadata.dashboard.messages.fetch();
+		// 		const embed = message.find(msg => msg.content === '').embeds[0];
 
-				const musicEmbed = EmbedBuilder.from(embed);
+		// 		const musicEmbed = EmbedBuilder.from(embed);
 
-				musicEmbed.setFields({
-					name: 'Próxima música',
-					value: 'Não tem.',
-				});
+		// 		musicEmbed.setFields({
+		// 			name: 'Próxima música',
+		// 			value: 'Não tem.',
+		// 		});
 
-				message.find(msg => msg.content === '').edit({
-					embeds: [musicEmbed],
-					components: [buttonRow],
-				});
+		// 		message.find(msg => msg.content === '').edit({
+		// 			embeds: [musicEmbed],
+		// 			components: [buttonRow],
+		// 		});
 
-				interaction.deferUpdate();
+		// 		interaction.deferUpdate();
 
-				return;
-			}
-			else if (interaction.customId === 'skip') {
-				queue.node.skip();
+		// 		return;
+		// 	}
+		// 	else if (interaction.customId === 'skip') {
+		// 		queue.node.skip();
 
-				if (queue.tracks.data.length <= 0) {
-					const message = await queue.metadata.dashboard.messages.fetch();
-					const embed = message.find(msg => msg.content === '').embeds[0];
+		// 		if (queue.tracks.data.length <= 0) {
+		// 			const message = await queue.metadata.dashboard.messages.fetch();
+		// 			const embed = message.find(msg => msg.content === '').embeds[0];
 
-					const musicEmbed = EmbedBuilder.from(embed);
+		// 			const musicEmbed = EmbedBuilder.from(embed);
 
-					musicEmbed.setTitle('Nenhuma música está tocando');
-					musicEmbed.setDescription(null);
-					musicEmbed.setThumbnail(null);
-					musicEmbed.setFields({
-						name: '\u200b',
-						value: '\u200b',
-					});
+		// 			musicEmbed.setTitle('Nenhuma música está tocando');
+		// 			musicEmbed.setDescription(null);
+		// 			musicEmbed.setThumbnail(null);
+		// 			musicEmbed.setFields({
+		// 				name: '\u200b',
+		// 				value: '\u200b',
+		// 			});
 
-					message.find(msg => msg.content === '').edit({
-						embeds: [musicEmbed],
-						components: [buttonRow],
-					});
-				}
+		// 			message.find(msg => msg.content === '').edit({
+		// 				embeds: [musicEmbed],
+		// 				components: [buttonRow],
+		// 			});
+		// 		}
 
-				interaction.deferUpdate();
+		// 		interaction.deferUpdate();
 
-				return;
-			}
-			else if (interaction.customId === 'shuffle') {
-				const message = await queue.metadata.dashboard.messages.fetch();
-				const embed = message.find(msg => msg.content === '').embeds[0];
+		// 		return;
+		// 	}
+		// 	else if (interaction.customId === 'shuffle') {
+		// 		const message = await queue.metadata.dashboard.messages.fetch();
+		// 		const embed = message.find(msg => msg.content === '').embeds[0];
 
-				const musicEmbed = EmbedBuilder.from(embed);
+		// 		const musicEmbed = EmbedBuilder.from(embed);
 
-				queue.tracks.shuffle();
+		// 		queue.tracks.shuffle();
 
-				musicEmbed.setFields({
-					name: 'Próxima música',
-					value: queue.tracks.data[0] ? `**[${queue.tracks.data[0].title}](${queue.tracks.data[0].url})** - ${queue.tracks.data[0].author}` : 'Não tem.',
-				});
+		// 		musicEmbed.setFields({
+		// 			name: 'Próxima música',
+		// 			value: queue.tracks.data[0] ? `**[${queue.tracks.data[0].title}](${queue.tracks.data[0].url})** - ${queue.tracks.data[0].author}` : 'Não tem.',
+		// 		});
 
-				message.find(msg => msg.content === '').edit({
-					embeds: [musicEmbed],
-					components: [buttonRow],
-				});
+		// 		message.find(msg => msg.content === '').edit({
+		// 			embeds: [musicEmbed],
+		// 			components: [buttonRow],
+		// 		});
 
-				interaction.deferUpdate();
+		// 		interaction.deferUpdate();
 
-				return;
-			}
-			else {
-				return;
-			}
-		}
+		// 		return;
+		// 	}
+		// 	else {
+		// 		return;
+		// 	}
+		// }
 	},
 };
