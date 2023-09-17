@@ -7,7 +7,8 @@
 		"deleteCommands": "node src/utils/delete-commands.js",
 		"prestart": "node src/utils/prod-deploy.js",
 		"cleanstart": "npm cache clean --force && npm run start",
-		"start": "node ."
+		"start": "node .",
+		"dev": "nodemon ."
 	},
 	"repository": {
 		"type": "git",
@@ -20,20 +21,19 @@
 	},
 	"homepage": "https://github.com/Casca0/monkeydj#readme",
 	"dependencies": {
-		"@discord-player/extractor": "^4.4.2",
-		"@discordjs/opus": "^0.9.0",
+		"@discord-player/extractor": "^4.4.4",
 		"@discordjs/rest": "^2.0.1",
-		"@discordjs/voice": "^0.16.0",
-		"discord-player": "^6.6.3",
-		"discord-voip": "^0.1.3",
+		"discord-player": "^6.6.4",
 		"discord.js": "^14.13.0",
 		"dotenv": "^16.3.1",
 		"express": "^4.18.2",
-		"mongoose": "^7.5.0",
+		"mediaplex": "^0.0.7",
+		"mongoose": "^7.5.2",
 		"youtube-ext": "^1.1.14"
 	},
 	"devDependencies": {
-		"eslint": "^8.48.0",
-		"eslint-config-google": "^0.14.0"
+		"eslint": "^8.49.0",
+		"eslint-config-google": "^0.14.0",
+		"nodemon": "^3.0.1"
 	}
 }

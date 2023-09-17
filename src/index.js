@@ -7,7 +7,6 @@ const path = require('node:path');
 const express = require('express');
 const { Player } = require('discord-player/dist');
 const { connect } = require('mongoose');
-const { YouTubeExtractor, SpotifyExtractor } = require('@discord-player/extractor/dist');
 
 const { DISCORD_TOKEN, MONGO_TOKEN } = process.env;
 
@@ -16,19 +15,15 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 // Música
 
 const player = Player.singleton(client, {
-	smoothVolume: false,
+	connectionTimeout: 60000 * 10,
+	smoothVolume: true,
 	ytdlOptions: {
-		lang: 'pt-br',
-		filter: 'audioonly',
-		quality: 'highest',
-		highWaterMark: 1 << 80,
-		dlChunkSize: 2,
+		highWaterMark: 1 << 25,
+		quality: 'highestaudio',
 	},
 });
 
-player.extractors.register(SpotifyExtractor, {});
-
-player.extractors.register(YouTubeExtractor, {});
+player.extractors.loadDefault();
 
 // Manipulador de comandos
 
