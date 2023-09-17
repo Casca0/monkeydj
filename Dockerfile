@@ -13,15 +13,15 @@ RUN volta install node@${NODE_VERSION}
 RUN mkdir /app
 WORKDIR /app
 
-COPY package*.json ./
-
-RUN apt-get update && apt-get install 'ffmpeg' -y --no-install-recommends \
+RUN apt install ffmpeg -y --no-install-recommends \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+COPY package*.json ./
+
 ENV NODE_ENV production
 
-COPY . .
+COPY . ./
 
 RUN npm install
 FROM debian:bullseye
