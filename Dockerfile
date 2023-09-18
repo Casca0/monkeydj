@@ -10,12 +10,12 @@ RUN volta install node@${NODE_VERSION}
 
 #######################################################################
 
+RUN apt install -y ffmpeg
+
 RUN mkdir /app
 WORKDIR /app
 
 COPY package*.json ./
-
-RUN apt install -y ffmpeg
 
 ENV NODE_ENV production
 
