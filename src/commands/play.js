@@ -1,4 +1,5 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+// eslint-disable-next-line no-unused-vars
+const { SlashCommandBuilder, EmbedBuilder, CommandInteraction } = require('discord.js');
 
 const { useMainPlayer } = require('discord-player/dist');
 
@@ -16,6 +17,9 @@ module.exports = {
 				.setRequired(true)
 				.setAutocomplete(true),
 		),
+	/**
+	 * @param {CommandInteraction} interaction
+	*/
 	async autocomplete(interaction) {
 		const query = interaction.options.getString('query');
 		const results = await player.search(query, {
@@ -41,6 +45,9 @@ module.exports = {
 			tracks,
 		);
 	},
+	/**
+	 * @param {CommandInteraction} interaction
+	*/
 	async execute(interaction) {
 		const channel = interaction.member.voice.channel;
 
@@ -90,39 +97,39 @@ module.exports = {
 			queue.addTrack(searchResult.tracks[0]);
 		}
 
-		try {
-			if (!queue.connection) await queue.connect(channel);
-			if (!queue.node.isPlaying()) {
-				await queue.node.play();
-				return interaction.editReply('Player iniciado.');
-			}
-			else {
-				if (queue.metadata.dashboard) {
-					if (queue.tracks.data.length === 1) {
-						const message = await queue.metadata.dashboard.messages.fetch();
-						const embed = message.find(msg => msg.content === '').embeds[0];
-
-						const musicEmbed = EmbedBuilder.from(embed);
-
-						musicEmbed.setFields({
-							name: 'Próxima música',
-							value: queue.tracks.data[0] ? `**[${queue.tracks.data[0].title}](${queue.tracks.data[0].url})** - ${queue.tracks.data[0].author}` : 'Não tem.',
-						});
-
-						message.find(msg => msg.content === '').edit({
-							embeds: [musicEmbed],
-							components: [buttonRow],
-						});
-					}
-				}
-				return;
-			}
+		if (!queue.connection) {
+			await queue.connect(channel).catch((err) => {
+				console.log(err);
+				queue.delete();
+				return interaction.followUp(`Ocorreu o seguinte erro : ${err}`);
+			});
 		}
-		catch (e) {
-			console.error(e);
-			queue.delete();
-			return interaction.followUp(`Ocorreu o seguinte erro : ${e}`);
+		if (!queue.node.isPlaying()) {
+			await queue.node.play().catch((err) => {
+				console.log(err);
+				queue.delete();
+				return interaction.followUp(`Ocorreu o seguinte erro : ${err}`);
+			});
+			return interaction.editReply('Player iniciado.');
 		}
 
+		if (queue.metadata.dashboard) {
+			if (queue.tracks.data.length === 1) {
+				const message = await queue.metadata.dashboard.messages.fetch();
+				const embed = message.find(msg => msg.content === '').embeds[0];
+
+				const musicEmbed = EmbedBuilder.from(embed);
+
+				musicEmbed.setFields({
+					name: 'Próxima música',
+					value: queue.tracks.data[0] ? `**[${queue.tracks.data[0].title}](${queue.tracks.data[0].url})** - ${queue.tracks.data[0].author}` : 'Não tem.',
+				});
+
+				message.find(msg => msg.content === '').edit({
+					embeds: [musicEmbed],
+					components: [buttonRow],
+				});
+			}
+		}
 	},
 };

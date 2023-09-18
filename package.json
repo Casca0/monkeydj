@@ -6,7 +6,6 @@
 	"scripts": {
 		"deleteCommands": "node src/utils/delete-commands.js",
 		"prestart": "node src/utils/prod-deploy.js",
-		"cleanstart": "npm cache clean --force && npm run start",
 		"start": "node .",
 		"dev": "nodemon ."
 	},
