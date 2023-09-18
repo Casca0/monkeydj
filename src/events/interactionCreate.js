@@ -37,7 +37,9 @@ module.exports = {
 				if (interaction.replied) {
 					return interaction.followUp(`Ocorreu um erro\n${e}`);
 				}
-				return interaction.reply(`Ocorreu um erro\n${e}`);
+				else {
+					return interaction.reply(`Ocorreu um erro\n${e}`);
+				}
 			}
 		}
 		else if (interaction.isUserContextMenuCommand()) {
