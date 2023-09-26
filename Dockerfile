@@ -1,36 +1,20 @@
-FROM debian:bullseye as builder
+# Use a Node.js base image with a specific version
+FROM node:18.16.0-bullseye
 
-ARG NODE_VERSION=18.16
+# Set the working directory inside the container
+WORKDIR /
 
-RUN apt-get update; apt install -y curl
-RUN curl https://get.volta.sh | bash
-ENV VOLTA_HOME /root/.volta
-ENV PATH /root/.volta/bin:$PATH
-RUN volta install node@${NODE_VERSION}
-
-#######################################################################
-
-RUN apt install -y ffmpeg
-
-RUN mkdir /app
-WORKDIR /app
-
+# Copy the package.json and package-lock.json files
 COPY package*.json ./
 
-ENV NODE_ENV production
+# Update package list and install ffmpeg
+RUN apt update && apt install -y ffmpeg
 
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
 
-RUN npm install
-FROM debian:bullseye
-
-LABEL fly_launch_runtime="nodejs"
-
-COPY --from=builder /root/.volta /root/.volta
-COPY --from=builder /app /app
-
-WORKDIR /app
-ENV NODE_ENV production
-ENV PATH /root/.volta/bin:$PATH
-
-CMD [ "npm", "start" ]
+# Define the command to start the Node.js application
+CMD [ "npm", "run", "start" ]
