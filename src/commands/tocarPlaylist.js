@@ -77,7 +77,7 @@ module.exports = {
 		const tracks = playlist.playlist_tracks.map(music => new Track(player, music));
 
 		queue.addTrack(tracks);
-		queue.tracks.shuffle();
+		queue.enableShuffle(true);
 
 		if (!queue.connection) await queue.connect(interaction.member.voice.channel);
 

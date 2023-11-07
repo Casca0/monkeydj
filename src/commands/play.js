@@ -5,8 +5,6 @@ const { useMainPlayer } = require('discord-player/dist');
 
 const { buttonRow } = require('../utils/dashboardComponents');
 
-const player = useMainPlayer();
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('play')
@@ -21,6 +19,8 @@ module.exports = {
 	 * @param {CommandInteraction} interaction
 	*/
 	async autocomplete(interaction) {
+		const player = useMainPlayer();
+
 		const query = interaction.options.getString('query');
 		const results = await player.search(query, {
 			searchEngine: 'youtubeSearch',
@@ -49,6 +49,8 @@ module.exports = {
 	 * @param {CommandInteraction} interaction
 	*/
 	async execute(interaction) {
+		const player = useMainPlayer();
+
 		const channel = interaction.member.voice.channel;
 
 		if (!interaction.member.voice.channelId) {

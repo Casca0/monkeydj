@@ -4,7 +4,6 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, Partials } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
-const express = require('express');
 const { Player } = require('discord-player/dist');
 const { connect } = require('mongoose');
 
@@ -67,25 +66,9 @@ client.login(DISCORD_TOKEN);
 
 // Database
 
-connect(MONGO_TOKEN, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-}).then(() => {
+connect(MONGO_TOKEN).then(() => {
 	console.log('Conectei ao banco de dados!');
 }).catch((err) => {
 	console.log(err);
-});
-
-// Server
-
-const app = express();
-
-app.get('/', (req, res) => {
-	res.send('Hello World!');
-});
-
-const port = 8080;
-app.listen(port, () => {
-	console.log(`listening on port ${port}`);
 });
 

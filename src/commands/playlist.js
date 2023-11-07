@@ -136,19 +136,6 @@ module.exports = {
 				searchEngine: 'auto',
 			}).then(res => res.toJSON());
 
-			if (searchResult.playlist) return interaction.reply('Não aceito links de playlist!');
-
-			if (searchResult.tracks.length == 0) return interaction.reply({ content: 'Não encontrei a música.', ephemeral: true });
-
-			const trackEmbed = new EmbedBuilder({
-				title: 'É essa música?',
-				description: `**[${searchResult.tracks[0].title}](${searchResult.tracks[0].url}) - ${searchResult.tracks[0].author}**`,
-				thumbnail: {
-					url: searchResult.tracks[0].thumbnail,
-				},
-				color: 0x4287f5,
-			});
-
 			const okayButton = new ButtonBuilder({
 				style: ButtonStyle.Success,
 				label: 'É ESSA',
@@ -162,37 +149,93 @@ module.exports = {
 				customId: 'back',
 			});
 
-			const interactionReply = await interaction.reply({ embeds: [trackEmbed], components: [new ActionRowBuilder({
-				components: [okayButton, backButton],
-			})] });
+			if (searchResult.tracks.length == 0) return interaction.reply({ content: 'Não encontrei a música.', ephemeral: true });
 
-			const buttonCollector = interactionReply.createMessageComponentCollector({
-				componentType: ComponentType.Button,
-			});
+			if (searchResult.playlist) {
 
-			buttonCollector.on('collect', async intr => {
-				if (intr.user.id != interaction.user.id) return;
+				const playlistEmbed = new EmbedBuilder({
+					title: 'É essa playlist?',
+					description: `**[${searchResult.playlist.title}](${searchResult.playlist.url})**`,
+					thumbnail: {
+						url: searchResult.playlist.thumbnail,
+					},
+					color: 0x4287f5,
+				});
 
-				if (intr.customId == 'okay') {
-					playlist.playlist_tracks.push(searchResult.tracks[0]);
-					playlist.save();
+				const interactionReply = await interaction.reply({ embeds: [playlistEmbed], components: [new ActionRowBuilder({
+					components: [okayButton, backButton],
+				})] });
 
-					const embed = new EmbedBuilder({
-						title: 'Música adicionada à playlist',
-						description: `**[${searchResult.tracks[0].title}](${searchResult.tracks[0].url}) - ${searchResult.tracks[0].author}**`,
-						thumbnail: {
-							url: searchResult.tracks[0].thumbnail,
-						},
-						color: 0x42f5ad,
-					});
+				const buttonCollector = interactionReply.createMessageComponentCollector({
+					componentType: ComponentType.Button,
+				});
 
-					return intr.update({ embeds: [embed], components: [] });
-				}
+				buttonCollector.on('collect', async intr => {
+					if (intr.user.id != interaction.user.id) return;
 
-				if (intr.customId == 'back') {
-					return intr.update({ content: 'Okay, pesquise novamente!', embeds: [], components: [] });
-				}
-			});
+					if (intr.customId == 'okay') {
+						playlist.playlist_tracks.push(...searchResult.tracks);
+						playlist.save();
+
+						const embed = new EmbedBuilder({
+							title: 'Músicas adicionadas à playlist',
+							description: `**[${searchResult.playlist.title}](${searchResult.playlist.url}) - ${searchResult.tracks.length} músicas**`,
+							thumbnail: {
+								url: searchResult.playlist.thumbnail,
+							},
+							color: 0x42f5ad,
+						});
+
+						return intr.update({ embeds: [embed], components: [] });
+					}
+
+					if (intr.customId == 'back') {
+						return intr.update({ content: 'Okay, pesquise novamente!', embeds: [], components: [] });
+					}
+				});
+			}
+			else {
+				const trackEmbed = new EmbedBuilder({
+					title: 'É essa música?',
+					description: `**[${searchResult.tracks[0].title}](${searchResult.tracks[0].url}) - ${searchResult.tracks[0].author}**`,
+					thumbnail: {
+						url: searchResult.tracks[0].thumbnail,
+					},
+					color: 0x4287f5,
+				});
+
+				const interactionReply = await interaction.reply({ embeds: [trackEmbed], components: [new ActionRowBuilder({
+					components: [okayButton, backButton],
+				})] });
+
+				const buttonCollector = interactionReply.createMessageComponentCollector({
+					componentType: ComponentType.Button,
+				});
+
+				buttonCollector.on('collect', async intr => {
+					if (intr.user.id != interaction.user.id) return;
+
+					if (intr.customId == 'okay') {
+						playlist.playlist_tracks.push(searchResult.tracks[0]);
+						playlist.save();
+
+						const embed = new EmbedBuilder({
+							title: 'Música adicionada à playlist',
+							description: `**[${searchResult.tracks[0].title}](${searchResult.tracks[0].url}) - ${searchResult.tracks[0].author}**`,
+							thumbnail: {
+								url: searchResult.tracks[0].thumbnail,
+							},
+							color: 0x42f5ad,
+						});
+
+						return intr.update({ embeds: [embed], components: [] });
+					}
+
+					if (intr.customId == 'back') {
+						return intr.update({ content: 'Okay, pesquise novamente!', embeds: [], components: [] });
+					}
+				});
+			}
 		}
 
 		if (command == 'remover') {
