@@ -71,4 +71,3 @@ connect(MONGO_TOKEN).then(() => {
 }).catch((err) => {
 	console.log(err);
 });
-
