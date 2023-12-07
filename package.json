@@ -7,7 +7,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "rimraf dist && tsc",
-		"prestart": "npm run build",
+		"prestart": "tsc",
 		"start": "node dist/index.js",
 		"dev": "npm run build && node dist/index.js"
 	},
