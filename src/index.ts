@@ -6,8 +6,8 @@ import {
 	CommandsPath,
 	EventsPath,
 	ValidationsPath,
-} from '#bot/utils/constants';
-import { registerPlayerEvents } from '#bot/player/registerEvents';
+} from '#bot/utils/constants.ts';
+import { registerPlayerEvents } from '#bot/player/registerEvents.ts';
 import express from 'express';
 
 const client = new Client({

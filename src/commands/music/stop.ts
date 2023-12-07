@@ -20,5 +20,5 @@ export async function run({ interaction }: SlashCommandProps) {
 	queue.node.stop();
 	queue.delete();
 
-	return interaction.editReply({ content: 'Player Parado!' });
+	return interaction.editReply({ content: 'Player parado!' });
 }
