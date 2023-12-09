@@ -1,14 +1,12 @@
 {
 	"compilerOptions": {
 		"target": "ES2021",
-		"module": "ESNext",
+		"module": "ES2022",
 		"rootDir": "./src",
-		"moduleResolution": "Bundler",
-		"noEmit": true,
+		"moduleResolution": "Node",
 		"resolveJsonModule": true,
 		"outDir": "./dist",
 		"allowSyntheticDefaultImports": true,
-		"allowImportingTsExtensions": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"strict": true,
@@ -24,9 +22,5 @@
 	],
 	"exclude": [
 		"node_modules"
-	],
-	"ts-node": {
-		"esm": true,
-		"moduleTypes": {}
-	}
+	]
 }

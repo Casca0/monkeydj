@@ -1,9 +1,12 @@
-import type { ValidationFunctionProps } from 'commandkit';
+import type { SlashCommandProps } from 'commandkit';
 
-export default async function({
-	interaction,
-}: ValidationFunctionProps) {
+export default async function({ interaction }: SlashCommandProps) {
+	const subcommand = interaction.options.getSubcommand(false) || '';
+
 	if (!interaction.inCachedGuild()) return true;
+	if (['criar', 'adicionar', 'remover', 'ver'].includes(subcommand)) {
+		return false;
+	}
 
 	const selfChannel = interaction.guild.members.me?.voice.channel;
 	const memberChannel = interaction.member.voice.channel;

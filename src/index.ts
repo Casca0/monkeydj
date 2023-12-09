@@ -6,9 +6,10 @@ import {
 	CommandsPath,
 	EventsPath,
 	ValidationsPath,
-} from '#bot/utils/constants.ts';
-import { registerPlayerEvents } from '#bot/player/registerEvents.ts';
+} from '#bot/utils/constants';
+import { registerPlayerEvents } from '#bot/player/registerEvents';
 import express from 'express';
+import { connect } from 'mongoose';
 
 const client = new Client({
 	intents: ['Guilds', 'GuildVoiceStates', 'GuildMembers', 'DirectMessages'],
@@ -26,7 +27,7 @@ const player = new Player(client, {
 
 new CommandKit({
 	client,
-	bulkRegister: false,
+	bulkRegister: true,
 	commandsPath: CommandsPath,
 	eventsPath: EventsPath,
 	skipBuiltInValidations: true,
@@ -55,4 +56,10 @@ const port = 8080;
 
 app.listen(port, () => {
 	console.log(`helloworld: listening on port ${port}`);
+});
+
+connect(process.env.MONGO_TOKEN as string).then(() => {
+	console.log('Conectei ao banco de dados!');
+}).catch((err) => {
+	console.log(err);
 });

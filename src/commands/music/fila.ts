@@ -10,7 +10,6 @@ export const data: CommandData = {
 export async function run({ interaction }: SlashCommandProps) {
 	if (!interaction.inCachedGuild()) return;
 
-
 	await interaction.deferReply();
 
 	const queue = useQueue(interaction.guildId);
@@ -65,7 +64,7 @@ export async function run({ interaction }: SlashCommandProps) {
 
 	if (canFitInOnePage) return;
 
-	const buttonCollector = await interactionReply.createMessageComponentCollector({
+	const buttonCollector = interactionReply.createMessageComponentCollector({
 		componentType: ComponentType.Button,
 	});
 
