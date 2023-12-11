@@ -29,7 +29,7 @@ export default async function interactionCreate(interaction: Interaction) {
 			]);
 		}
 
-		const results = data.tracks.slice(0, 10).map((track) => {
+		const results = data.tracks.slice(0, data.tracks.length).map((track) => {
 			let title = track.title;
 
 			if (title.length >= 100) {
