@@ -39,17 +39,36 @@ export default async function interactionCreate(interaction: Interaction) {
 
 	if (focusedOption.name === 'query') {
 		const player = useMainPlayer();
-		const query = interaction.options.getString('query', true);
+		const query = interaction.options.getString('query', true) || ' ';
 		const results = await player.search(query, {
-			searchEngine: 'youtubeSearch',
+			searchEngine: 'auto',
 		});
 
-		const tracks = results.tracks.slice(0, results.tracks.length).map((t) => ({
-			name: t.title,
-			value: t.url,
-		}));
+		if (results.playlist) {
+			return interaction.respond([
+				{
+					name: `${results.playlist.title} - ${results.playlist.source.charAt(0).toUpperCase() + results.playlist.source.slice(1)}`,
+					value: results.playlist.url,
+				},
+			]);
+		}
 
-		await interaction.respond(
+		const tracks = results.tracks.slice(0, results.tracks.length).map((track) => {
+			let title = track.title;
+
+			if (title.length >= 100) {
+				title = title.substring(0, 88).trimEnd() + '...';
+			}
+
+			const trackObj = {
+				name: `${title} - ${track.source.charAt(0).toUpperCase() + track.source.slice(1)}`,
+				value: track.url,
+			};
+
+			return trackObj;
+		});
+
+		return interaction.respond(
 			tracks,
 		);
 	}

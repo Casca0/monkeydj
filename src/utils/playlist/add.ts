@@ -17,7 +17,8 @@ export async function handlePlaylistAdd({ interaction }: SlashCommandProps) {
 	await interaction.deferReply();
 
 	const result = await player.search(query, {
-		searchEngine: 'youtubeSearch',
+		searchEngine: 'auto',
+		requestedBy: interaction.user,
 	});
 
 	if (!result.tracks.length) return interaction.editReply('Não encontrei a música ou playlist informada.');
@@ -36,7 +37,7 @@ export async function handlePlaylistAdd({ interaction }: SlashCommandProps) {
 	});
 
 	if (result.playlist) {
-		const serializedTracks: SerializedTrack[] = result.tracks.map((track: Track) => serialize(track));
+		const serializedTracks: SerializedTrack[] = result.playlist.tracks.map((track: Track) => serialize(track));
 
 		const playlistEmbed = new EmbedBuilder({
 			title: 'É essa playlist?',
