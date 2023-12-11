@@ -20,6 +20,15 @@ export default async function interactionCreate(interaction: Interaction) {
 
 		if (!data.hasTracks()) return interaction.respond([]);
 
+		if (data.playlist) {
+			return interaction.respond([
+				{
+					name: `${data.playlist.title} - ${data.playlist.source.charAt(0).toUpperCase() + data.playlist.source.slice(1)}`,
+					value: data.playlist.url,
+				},
+			]);
+		}
+
 		const results = data.tracks.slice(0, 10).map((track) => {
 			let title = track.title;
 
