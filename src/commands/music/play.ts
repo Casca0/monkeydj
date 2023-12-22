@@ -13,6 +13,11 @@ export const data: CommandData = {
 			required: true,
 			autocomplete: true,
 		},
+		{
+			name: 'embaralhar',
+			description: 'Devo embaralhar a fila de músicas?',
+			type: ApplicationCommandOptionType.Boolean,
+		},
 	],
 };
 
@@ -53,6 +58,10 @@ export async function run({ interaction }: SlashCommandProps) {
 		await player.play(channel, result, {
 			requestedBy: interaction.user,
 		});
+
+		if (interaction.options.getBoolean('embaralhar')) {
+			queue.tracks.shuffle();
+		}
 
 		if (!queue.node.isPlaying()) {
 			return interaction.editReply('Player iniciado!');

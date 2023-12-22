@@ -81,6 +81,11 @@ export const data: CommandData = {
 					required: true,
 					autocomplete: true,
 				},
+				{
+					name: 'embaralhar',
+					description: 'Embaralhar a fila de músicas?',
+					type: ApplicationCommandOptionType.Boolean,
+				},
 			],
 		},
 		{

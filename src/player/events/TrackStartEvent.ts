@@ -18,7 +18,7 @@ implements PlayerEvent<typeof GuildQueueEvent.playerStart> {
 				url: track.thumbnail,
 			},
 			footer: {
-				text: `Pedido por ${track.requestedBy?.tag}`,
+				text: `${track.requestedBy ? `Pedido por ${track.requestedBy.tag}` : ''}`,
 				iconURL: track.requestedBy?.displayAvatarURL(),
 			},
 		});

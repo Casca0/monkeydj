@@ -39,6 +39,10 @@ export async function handlePlaylistPlay({ interaction }: SlashCommandProps) {
 
 	queue.addTrack(playlistTracks);
 
+	if (interaction.options.getBoolean('embaralhar')) {
+		queue.tracks.shuffle();
+	}
+
 	if (!queue.node.isPlaying()) {
 		await queue.connect(channel);
 		await queue.node.play();
