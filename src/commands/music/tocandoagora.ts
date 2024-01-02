@@ -35,7 +35,7 @@ export async function run({ interaction }: SlashCommandProps) {
 		},
 		color: 0x4D3A81,
 		footer: {
-			text: `Pedido por ${track.requestedBy?.tag} • ${timestamp.progress}%`,
+			text: `Pedido por ${track.requestedBy?.tag} • ${timestamp.progress + '%'}`,
 			iconURL: track.requestedBy?.displayAvatarURL(),
 		},
 	},);

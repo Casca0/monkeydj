@@ -1,19 +1,19 @@
 import {
 	type CommandData,
 	type SlashCommandProps,
-	CommandType,
 } from 'commandkit';
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
 import { handlePlaylistCreate } from '#bot/utils/playlist/create';
 import { handlePlaylistAdd } from '#bot/utils/playlist/add';
 import { handlePlaylistRemove } from '#bot/utils/playlist/remove';
 import { handlePlaylistPlay } from '#bot/utils/playlist/play';
 import { handlePlaylistSee } from '#bot/utils/playlist/see';
+import { handlePlaylistExtract } from '#bot/utils/playlist/extract';
 
 export const data: CommandData = {
 	name: 'playlist',
 	description: 'Comandos para a playlist.',
-	type: CommandType.ChatInput,
+	type: ApplicationCommandType.ChatInput,
 	options: [
 		{
 			name: 'criar',
@@ -34,7 +34,7 @@ export const data: CommandData = {
 			type: ApplicationCommandOptionType.Subcommand,
 			options: [
 				{
-					name: 'playlist',
+					name: 'sua_playlist',
 					description: 'O nome da playlist.',
 					type: ApplicationCommandOptionType.String,
 					required: true,
@@ -55,7 +55,7 @@ export const data: CommandData = {
 			type: ApplicationCommandOptionType.Subcommand,
 			options: [
 				{
-					name: 'playlist',
+					name: 'sua_playlist',
 					description: 'Nome da playlist',
 					type: ApplicationCommandOptionType.String,
 					required: true,
@@ -108,6 +108,20 @@ export const data: CommandData = {
 				},
 			],
 		},
+		{
+			name: 'extrair',
+			description: 'Extrai uma playlist para sua DM.',
+			type: ApplicationCommandOptionType.Subcommand,
+			options: [
+				{
+					name: 'playlist',
+					description: 'A playlist para exportar.',
+					type: ApplicationCommandOptionType.String,
+					required: true,
+					autocomplete: true,
+				},
+			],
+		},
 	],
 };
 
@@ -129,5 +143,7 @@ export async function run(props: SlashCommandProps) {
 		return handlePlaylistPlay(props);
 	case 'ver':
 		return handlePlaylistSee(props);
+	case 'extrair':
+		return handlePlaylistExtract(props);
 	}
 }

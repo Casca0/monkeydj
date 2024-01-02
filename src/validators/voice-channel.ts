@@ -4,7 +4,7 @@ export default async function({ interaction }: SlashCommandProps) {
 	const subcommand = interaction.options.getSubcommand(false) || '';
 
 	if (!interaction.inCachedGuild()) return true;
-	if (['criar', 'adicionar', 'remover', 'ver'].includes(subcommand)) {
+	if (['criar', 'adicionar', 'remover', 'ver', 'extrair'].includes(subcommand)) {
 		return false;
 	}
 
