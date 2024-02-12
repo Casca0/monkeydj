@@ -4,7 +4,7 @@ import { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentTy
 import { SerializedTrack } from 'discord-player';
 
 export async function handlePlaylistRemove({ interaction }: SlashCommandProps) {
-	const playlistName = interaction.options.getString('playlist', true);
+	const playlistName = interaction.options.getString('sua_playlist', true);
 	const musicIndex = interaction.options.getInteger('musica', true);
 
 	const playlist = await playlistModel.findOne({ playlist_name: playlistName });
