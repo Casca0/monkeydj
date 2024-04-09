@@ -11,9 +11,9 @@ COPY package*.json ./
 RUN apt update && apt install -y ffmpeg
 
 # Install dependencies
-RUN npm install
+RUN npm install && npm install -g typescript
 
-RUN npx tsc
+RUN tsc
 
 # Copy the rest of the application code
 COPY . .
