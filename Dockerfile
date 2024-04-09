@@ -13,8 +13,10 @@ RUN apt update && apt install -y ffmpeg
 # Install dependencies
 RUN npm install
 
+RUN npx tsc
+
 # Copy the rest of the application code
 COPY . .
 
 # Define the command to start the Node.js application
-CMD [ "npm", "run", "start" ]
+CMD [ "node", "dist/index.js" ]
