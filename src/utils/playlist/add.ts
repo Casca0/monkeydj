@@ -6,7 +6,7 @@ import { ButtonStyle, ButtonBuilder, EmbedBuilder, ActionRowBuilder, ComponentTy
 export async function handlePlaylistAdd({ interaction }: SlashCommandProps) {
 	const player = useMainPlayer();
 	const query = interaction.options.getString('query', true);
-	const playlistName = interaction.options.getString('playlist', true);
+	const playlistName = interaction.options.getString('sua_playlist', true);
 
 	const playlist = await playlistModel.findOne({
 		playlist_name: playlistName,
