@@ -3,6 +3,7 @@ import type { CommandData, SlashCommandProps, CommandOptions } from 'commandkit'
 export const data: CommandData = {
 	name: 'ping',
 	description: 'Pong!',
+	dm_permission: false,
 };
 
 export function run({ interaction, client }: SlashCommandProps) {
@@ -10,7 +11,6 @@ export function run({ interaction, client }: SlashCommandProps) {
 }
 
 export const options: CommandOptions = {
-	guildOnly: true,
 	userPermissions: ['Administrator', 'AddReactions'],
 	deleted: false,
 };

@@ -38,7 +38,7 @@ export default async function interactionCreate(interaction: Interaction) {
 	if (focusedOption.name === 'playlists') {
 		const user = interaction.options.get('membro', true).value;
 
-		const playlists = await playlistModel.find({ user_id: user });
+		const playlists = await playlistModel.find({ user_id: user?.toString() });
 
 		const results = playlists.slice(0, playlists.length).map((p) => ({
 			name: p.playlist_name,
