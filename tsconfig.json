@@ -13,13 +13,9 @@
 		"skipLibCheck": true,
 		"incremental": true,
 		"paths": {
-			"#bot/*": [
-				"./src/*",
-			]
+			"#bot/*": ["./src/*"]
 		}
 	},
-	"include": [
-		"./src/**/*"
-	],
+	"include": ["./src/**/*"],
 	"exclude": ["**/node_modules", "**/.*/"]
 }

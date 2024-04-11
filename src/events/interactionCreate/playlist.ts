@@ -54,32 +54,37 @@ export default async function interactionCreate(interaction: Interaction) {
 		const player = useMainPlayer();
 		const query = interaction.options.getString('query', true) || ' ';
 		const results = await player.search(query, {
-			searchEngine: 'auto',
+			searchEngine: 'autoSearch',
 		});
 
 		if (results.playlist) {
 			return interaction.respond([
 				{
-					name: `${results.playlist.title} - ${results.playlist.source.charAt(0).toUpperCase() + results.playlist.source.slice(1)}`,
+					name: `${results.playlist.title} - ${
+						results.playlist.source.charAt(0).toUpperCase() +
+						results.playlist.source.slice(1)
+					}`,
 					value: results.playlist.url,
 				},
 			]);
 		}
 
-		const tracks = results.tracks.slice(0, results.tracks.length).map((track) => {
-			let title = track.title;
+		const tracks = results.tracks
+			.slice(0, results.tracks.length)
+			.map((track) => {
+				let title = track.title;
 
-			if (title.length >= 100) {
-				title = title.substring(0, 88).trimEnd() + '...';
-			}
+				if (title.length >= 70) {
+					title = title.substring(0, 35).trimEnd() + '...';
+				}
 
-			const trackObj = {
-				name: `${title} - ${track.source.charAt(0).toUpperCase() + track.source.slice(1)}`,
-				value: track.url,
-			};
+				const trackObj = {
+					name: `${title} (${track.author})`,
+					value: track.url,
+				};
 
-			return trackObj;
-		});
+				return trackObj;
+			});
 
 		return interaction.respond(
 			tracks,

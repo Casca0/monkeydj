@@ -10,20 +10,23 @@ export default async function interactionCreate(interaction: Interaction) {
 
 	if (!query.length) return interaction.respond([]);
 
+	const player = useMainPlayer();
+
+	const data = await player.search(query, {
+		requestedBy: interaction.user,
+		searchEngine: 'autoSearch',
+	});
+
 	try {
-		const player = useMainPlayer();
-
-		const data = await player.search(query, {
-			requestedBy: interaction.user,
-			searchEngine: 'auto',
-		});
-
 		if (!data.hasTracks()) return interaction.respond([]);
 
 		if (data.playlist) {
 			return interaction.respond([
 				{
-					name: `${data.playlist.title} - ${data.playlist.source.charAt(0).toUpperCase() + data.playlist.source.slice(1)}`,
+					name: `${data.playlist.title} - ${
+						data.playlist.source.charAt(0).toUpperCase() +
+						data.playlist.source.slice(1)
+					}`,
 					value: data.playlist.url,
 				},
 			]);
@@ -32,12 +35,12 @@ export default async function interactionCreate(interaction: Interaction) {
 		const results = data.tracks.slice(0, data.tracks.length).map((track) => {
 			let title = track.title;
 
-			if (title.length >= 100) {
-				title = title.substring(0, 88).trimEnd() + '...';
+			if (title.length >= 70) {
+				title = title.substring(0, 35).trimEnd() + '...';
 			}
 
 			const trackObj = {
-				name: `${title} - ${track.source.charAt(0).toUpperCase() + track.source.slice(1)}`,
+				name: `${title} (${track.author})`,
 				value: track.url,
 			};
 
