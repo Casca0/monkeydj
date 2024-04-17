@@ -14,7 +14,7 @@ export default async function interactionCreate(interaction: Interaction) {
 
 	const data = await player.search(query, {
 		requestedBy: interaction.user,
-		searchEngine: 'autoSearch',
+		searchEngine: 'youtube',
 	});
 
 	try {
@@ -35,12 +35,12 @@ export default async function interactionCreate(interaction: Interaction) {
 		const results = data.tracks.slice(0, data.tracks.length).map((track) => {
 			let title = track.title;
 
-			if (title.length >= 70) {
-				title = title.substring(0, 35).trimEnd() + '...';
+			if (title.length >= 100) {
+				title = title.substring(0, 90).trimEnd() + '...';
 			}
 
 			const trackObj = {
-				name: `${title} (${track.author})`,
+				name: `${title}`,
 				value: track.url,
 			};
 

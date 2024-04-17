@@ -54,7 +54,7 @@ export default async function interactionCreate(interaction: Interaction) {
 		const player = useMainPlayer();
 		const query = interaction.options.getString('query', true) || ' ';
 		const results = await player.search(query, {
-			searchEngine: 'autoSearch',
+			searchEngine: 'youtube',
 		});
 
 		if (results.playlist) {

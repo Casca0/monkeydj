@@ -17,7 +17,7 @@ export async function handlePlaylistAdd({ interaction }: SlashCommandProps) {
 	await interaction.deferReply();
 
 	const result = await player.search(query, {
-		searchEngine: 'autoSearch',
+		searchEngine: 'youtube',
 		requestedBy: interaction.user,
 	});
 
