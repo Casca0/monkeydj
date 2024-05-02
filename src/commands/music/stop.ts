@@ -13,12 +13,11 @@ export async function run({ interaction }: SlashCommandProps) {
 
 	const queue = useQueue(interaction.guildId!);
 
-	if (!queue?.isPlaying()) {
-		return interaction.editReply({ content: 'Nenhuma música está tocando!' });
+	if (queue) {
+		queue.node.stop();
+		queue.delete();
+		return interaction.editReply({ content: 'Player parado!' });
 	}
 
-	queue.node.stop();
-	queue.delete();
-
-	return interaction.editReply({ content: 'Player parado!' });
+	return interaction.editReply({ content: 'Nenhuma música está tocando!' });
 }

@@ -13,7 +13,7 @@ export async function run({ interaction }: SlashCommandProps) {
 
 	const queue = useQueue(interaction.guildId!);
 
-	if (!queue?.isPlaying()) {
+	if (!queue?.tracks) {
 		return interaction.editReply({ content: 'Nenhuma música está tocando!' });
 	}
 
