@@ -68,11 +68,14 @@ export async function run({ interaction }: SlashCommandProps) {
 			return interaction.editReply('Player iniciado!');
 		}
 
-		return interaction.editReply({ content: `Carregando a ${result.playlist ? `playlist **${result.playlist.title}**` : `música **${result.tracks[0].title}**`}` });
-	}
-	catch (error) {
-		console.error(error);
-
+		return interaction.editReply({
+			content: `Carregando a ${
+				result.playlist
+					? `playlist **${result.playlist.title}**`
+					: `música **${result.tracks[0].title}**`
+			}`,
+		});
+	} catch (error) {
 		return interaction.editReply('Ocorreu um erro!');
 	}
 }

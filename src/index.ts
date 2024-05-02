@@ -17,11 +17,10 @@ const client = new Client({
 });
 
 const player = new Player(client, {
-	skipFFmpeg: false,
+	skipFFmpeg: true,
 	connectionTimeout: 60000 * 10,
 	ytdlOptions: {
-		highWaterMark: 1 << 25,
-		quality: 'highestaudio',
+		quality: 'lowestaudio',
 	},
 });
 
