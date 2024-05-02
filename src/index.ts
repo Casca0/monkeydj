@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { Client, Partials } from 'discord.js';
 import { Player } from 'discord-player';
+import { SpotifyExtractor, YoutubeExtractor } from '@discord-player/extractor';
 import { CommandKit } from 'commandkit';
 import {
 	CommandsPath,
@@ -34,7 +35,14 @@ new CommandKit({
 });
 
 await registerPlayerEvents();
-await player.extractors.loadDefault();
+
+await player.extractors.register(SpotifyExtractor, {
+	clientId: process.env.SPOTIFY_CLIENT_ID,
+	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+});
+
+await player.extractors.register(YoutubeExtractor, {});
+
 await client.login();
 
 process.on('unhandledRejection', (reason) => {
