@@ -18,11 +18,11 @@ const client = new Client({
 });
 
 const player = new Player(client, {
-	skipFFmpeg: true,
+	skipFFmpeg: false,
 	connectionTimeout: 60000 * 10,
 	ytdlOptions: {
-		highWaterMark: 1 << 60,
-		quality: 'lowestaudio',
+		highWaterMark: 1 << 35,
+		quality: 'highestaudio',
 	},
 });
 
