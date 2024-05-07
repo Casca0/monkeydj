@@ -18,11 +18,11 @@ const client = new Client({
 });
 
 const player = new Player(client, {
-	skipFFmpeg: true,
+	skipFFmpeg: false,
 	connectionTimeout: 60000 * 10,
 	ytdlOptions: {
-		highWaterMark: 1 << 60,
-		quality: 'lowestaudio',
+		highWaterMark: 1 << 35,
+		quality: 'highestaudio',
 	},
 });
 
@@ -60,7 +60,7 @@ app.get('/', (req, res) => {
 	res.send('Hello World!');
 });
 
-const port = 8080;
+const port = 8000;
 
 app.listen(port, () => {
 	console.log(`helloworld: listening on port ${port}`);

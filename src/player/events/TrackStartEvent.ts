@@ -23,6 +23,9 @@ implements PlayerEvent<typeof GuildQueueEvent.playerStart> {
 			},
 		});
 
-		queue.metadata.channel.send({ embeds: [trackEmbed] });
+		queue.metadata.channel.send({
+			embeds: [trackEmbed],
+			flags: ['SuppressNotifications'],
+		});
 	}
 }

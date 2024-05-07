@@ -56,7 +56,7 @@ export async function handlePlaylistRemove({ interaction }: SlashCommandProps) {
 		if (intr.user.id != interaction.user.id) return;
 
 		if (intr.customId == 'okay') {
-			playlist.playlist_tracks.splice(musicIndex, 1);
+			playlist.playlist_tracks.splice(musicIndex >= 1 ? musicIndex - 1 : 0, 1);
 			playlist.save();
 
 			return intr.update({ content: 'Música removida da playlist!', embeds: [], components: [] });

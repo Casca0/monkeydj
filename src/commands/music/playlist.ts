@@ -9,6 +9,8 @@ import { handlePlaylistRemove } from '#bot/utils/playlist/remove';
 import { handlePlaylistPlay } from '#bot/utils/playlist/play';
 import { handlePlaylistSee } from '#bot/utils/playlist/see';
 import { handlePlaylistExtract } from '#bot/utils/playlist/extract';
+import { handlePlaylistClear } from '#bot/utils/playlist/clear';
+import { handlePlaylistDelete } from '#bot/utils/playlist/delete';
 
 export const data: CommandData = {
 	name: 'playlist',
@@ -122,6 +124,34 @@ export const data: CommandData = {
 				},
 			],
 		},
+		{
+			name: 'limpar',
+			description: 'Limpa a playlist.',
+			type: ApplicationCommandOptionType.Subcommand,
+			options: [
+				{
+					name: 'sua_playlist',
+					description: 'A playlist para limpar',
+					type: ApplicationCommandOptionType.String,
+					required: true,
+					autocomplete: true,
+				},
+			],
+		},
+		{
+			name: 'excluir',
+			description: 'Exclui a playlist.',
+			type: ApplicationCommandOptionType.Subcommand,
+			options: [
+				{
+					name: 'sua_playlist',
+					description: 'A playlist para excluir',
+					type: ApplicationCommandOptionType.String,
+					required: true,
+					autocomplete: true,
+				},
+			],
+		},
 	],
 };
 
@@ -145,5 +175,9 @@ export async function run(props: SlashCommandProps) {
 		return handlePlaylistSee(props);
 	case 'extrair':
 		return handlePlaylistExtract(props);
+	case 'limpar':
+		return handlePlaylistClear(props);
+	case 'excluir':
+		return handlePlaylistDelete(props);
 	}
 }
