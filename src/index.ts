@@ -21,6 +21,7 @@ const player = new Player(client, {
 	skipFFmpeg: true,
 	connectionTimeout: 60000 * 10,
 	ytdlOptions: {
+		highWaterMark: 1 << 60,
 		quality: 'lowestaudio',
 	},
 });
