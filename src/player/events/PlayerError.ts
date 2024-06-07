@@ -1,10 +1,10 @@
 import { GuildQueue, GuildQueueEvent } from 'discord-player';
-import { PlayerEvent } from '../common/types.js';
+import { PlayerEventInterface } from '../common/types.js';
 import { PlayerMetadata } from '../PlayerMetadata.js';
 
 // prettier-ignore
 export default class PlayerError
-implements PlayerEvent<typeof GuildQueueEvent.playerError>
+implements PlayerEventInterface<typeof GuildQueueEvent.playerError>
 {
 	public name = GuildQueueEvent.playerError;
 
