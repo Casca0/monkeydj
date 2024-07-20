@@ -1,10 +1,10 @@
 import { GuildQueue, GuildQueueEvent, Track } from 'discord-player';
-import { PlayerEvent } from '../common/types.js';
+import { PlayerEventInterface } from '../common/types.js';
 import { PlayerMetadata } from '../PlayerMetadata.js';
 import { EmbedBuilder } from 'discord.js';
 
 export default class TrackStartEvent
-implements PlayerEvent<typeof GuildQueueEvent.playerStart> {
+implements PlayerEventInterface<typeof GuildQueueEvent.playerStart> {
 	public name = GuildQueueEvent.playerStart;
 
 	public async execute(
