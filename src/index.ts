@@ -1,7 +1,11 @@
 import 'dotenv/config';
 import { Client, Partials } from 'discord.js';
 import { Player } from 'discord-player';
-import { SpotifyExtractor, YoutubeExtractor } from '@discord-player/extractor';
+import { SpotifyExtractor } from '@discord-player/extractor';
+import {
+	YoutubeiExtractor,
+	createYoutubeiStream,
+} from 'discord-player-youtubei';
 import { CommandKit } from 'commandkit';
 import {
 	CommandsPath,
@@ -18,7 +22,6 @@ const client = new Client({
 });
 
 const player = new Player(client, {
-	skipFFmpeg: false,
 	connectionTimeout: 60000 * 10,
 	ytdlOptions: {
 		highWaterMark: 1 << 35,
@@ -37,12 +40,17 @@ new CommandKit({
 
 await registerPlayerEvents();
 
+await player.extractors.register(YoutubeiExtractor, {});
+
 await player.extractors.register(SpotifyExtractor, {
 	clientId: process.env.SPOTIFY_CLIENT_ID,
 	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+	createStream: createYoutubeiStream,
 });
 
-await player.extractors.register(YoutubeExtractor, {});
+await player.extractors.loadDefault(
+	(ext) => !['YouTubeExtractor', 'SpotifyExtractor'].includes(ext)
+);
 
 await client.login();
 

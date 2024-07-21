@@ -29,6 +29,7 @@
 		"@discord-player/extractor": "^4.5.0",
 		"commandkit": "^0.1.10",
 		"discord-player": "^6.7.0",
+		"discord-player-youtubei": "^1.1.14",
 		"discord.js": "^14.15.3",
 		"dotenv": "^16.4.5",
 		"express": "^4.19.2",
