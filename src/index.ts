@@ -5,7 +5,6 @@ import { SpotifyExtractor } from '@discord-player/extractor';
 import {
 	YoutubeiExtractor,
 	createYoutubeiStream,
-	generateOauthTokens,
 } from 'discord-player-youtubei';
 import { CommandKit } from 'commandkit';
 import {
@@ -16,8 +15,6 @@ import {
 import { registerPlayerEvents } from '#bot/player/registerEvents';
 import express from 'express';
 import { connect } from 'mongoose';
-
-const tokens = await generateOauthTokens();
 
 const client = new Client({
 	intents: ['Guilds', 'GuildVoiceStates', 'GuildMembers', 'DirectMessages'],
@@ -44,7 +41,14 @@ new CommandKit({
 await registerPlayerEvents();
 
 await player.extractors.register(YoutubeiExtractor, {
-	authentication: tokens as unknown as string,
+	authentication: {
+		access_token: process.env.YT_ACCESS_TOKEN as string,
+		refresh_token: process.env.YT_REFRESH_TOKEN as string,
+		scope:
+			'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube-paid-content',
+		token_type: 'Bearer',
+		expiry_date: '2024-07-21T21:20:10.444Z',
+	},
 });
 
 await player.extractors.register(SpotifyExtractor, {
